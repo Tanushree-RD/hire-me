@@ -1,5 +1,5 @@
-import { Icon, Card, SectionHeading, Pill } from '@/components/ui/primitives'
-import { locationPaths } from '@/components/ui/icons'
+import { MapPin } from 'lucide-react'
+import { Card, SectionHeading, Pill } from '@/components/ui/primitives'
 import type { Experience } from './types'
 
 const defaultExperiences: Experience[] = [
@@ -36,34 +36,34 @@ function TimelineEntry({ experience, isLast }: { experience: Experience; isLast:
     >
       {/* Timeline connector */}
       <div className="flex flex-col items-center shrink-0" aria-hidden="true">
-        <div className="w-3 h-3 rounded-full bg-accent-500 mt-1.5 shrink-0 z-10" />
-        {!isLast && <div className="w-0.5 bg-gray-200 flex-1 mt-1" />}
+        <div className="w-3 h-3 rounded-full bg-brand mt-1.5 shrink-0 z-10 shadow-xs" />
+        {!isLast && <div className="w-0.5 bg-border-subtle flex-1 mt-1" />}
       </div>
 
       {/* Content */}
       <div className={`flex-1 min-w-0 ${isLast ? 'pb-0' : 'pb-6'}`}>
         <div className="flex items-center justify-between gap-3 mb-1">
-          <h3 className="font-semibold text-gray-900 text-sm">{experience.title}</h3>
+          <h3 className="font-bold text-text-main text-sm sm:text-base tracking-tight">{experience.title}</h3>
           <Pill>
-            <time>{experience.duration}</time>
+            <time className="font-mono">{experience.duration}</time>
           </Pill>
         </div>
 
-        <p className="text-sm text-gray-500 mb-2">
+        <p className="text-xs sm:text-sm font-medium text-text-muted mb-2.5">
           {experience.company}{' '}
-          <span className="inline-flex items-center gap-0.5">
-            <Icon paths={locationPaths} className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-1 ml-1.5">
+            <MapPin className="w-3.5 h-3.5" />
             {experience.location}
           </span>
         </p>
 
         <ul className="space-y-1.5 list-none">
           {experience.achievements.map((achievement, i) => (
-            <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
-              <span className="text-gray-400 mt-1.5 shrink-0" aria-hidden="true">
+            <li key={i} className="text-sm text-text-muted leading-relaxed flex items-start gap-2">
+              <span className="text-text-muted/60 mt-1 shrink-0" aria-hidden="true">
                 •
               </span>
-              <span>{achievement}</span>
+              <span className="text-text-main/90">{achievement}</span>
             </li>
           ))}
         </ul>
@@ -82,7 +82,7 @@ export default function ExperienceTimeline({
       <SectionHeading>
         <span id="experience-heading">Experience</span>
       </SectionHeading>
-      <Card className="p-5">
+      <Card className="p-6 sm:p-7">
         <div className="space-y-0">
           {experiences.map((exp, idx) => (
             <TimelineEntry

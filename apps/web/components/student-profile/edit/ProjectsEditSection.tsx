@@ -1,13 +1,20 @@
 'use client'
 
 import { useState, type KeyboardEvent } from 'react'
-import { Card, Icon } from '@/components/ui/primitives'
-import { plusD, trashD, xMarkD } from '@/components/ui/icons'
+import { Plus, Trash2, X } from 'lucide-react'
+import { Card } from '@/components/ui/primitives'
 import type { Project } from '../types'
 
 interface ProjectsEditSectionProps {
   projects: Project[]
   onChange: (projects: Project[]) => void
+}
+
+interface ProjectCardEditorProps {
+  project: Project
+  index: number
+  onUpdate: (index: number, updated: Project) => void
+  onDelete: (index: number) => void
 }
 
 /** Individual Project Card Editor with tag management */
@@ -16,15 +23,10 @@ function ProjectCardEditor({
   index,
   onUpdate,
   onDelete,
-}: {
-  project: Project
-  index: number
-  onUpdate: (index: number, updated: Project) => void
-  onDelete: (index: number) => void
-}) {
+}: ProjectCardEditorProps) {
   const [newTag, setNewTag] = useState('')
 
-  const handleFieldChange = (field: keyof Project, value: Project[keyof Project]) => {
+  const handleFieldChange = (field: keyof Project, value: unknown) => {
     onUpdate(index, { ...project, [field]: value })
   }
 
@@ -54,20 +56,20 @@ function ProjectCardEditor({
   }
 
   return (
-    <div className="p-5 rounded-lg bg-gray-50/60 border border-gray-200/80 transition-all hover:border-gray-300">
+    <div className="p-5 sm:p-6 rounded-2xl bg-bg-page border border-border-subtle transition-all duration-200 hover:border-border-muted hover:shadow-xs">
       {/* Project Card Header */}
-      <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-gray-200/60">
-        <span className="text-xs font-bold text-accent-700 bg-accent-50 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+      <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-border-subtle">
+        <span className="text-xs font-bold text-brand-dark bg-brand-light px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-brand-mint/50">
           Project #{index + 1}
         </span>
 
         <button
           type="button"
           onClick={() => onDelete(index)}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 px-2 py-1 rounded transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700 bg-red-50/80 border border-red-200/80 hover:bg-red-100/80 active:scale-95 px-3 py-1.5 rounded-xl transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
           aria-label={`Delete project ${project.title || index + 1}`}
         >
-          <Icon d={trashD} className="w-3.5 h-3.5" />
+          <Trash2 className="w-3.5 h-3.5" />
           Delete
         </button>
       </div>
@@ -75,7 +77,7 @@ function ProjectCardEditor({
       <div className="space-y-4">
         {/* Title */}
         <div>
-          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
             Project Title <span className="text-red-500">*</span>
           </label>
           <input
@@ -84,13 +86,13 @@ function ProjectCardEditor({
             value={project.title}
             onChange={(e) => handleFieldChange('title', e.target.value)}
             placeholder="e.g. Distributed Cache System"
-            className="w-full px-3 py-2 text-sm text-gray-900 bg-white border border-gray-300 rounded-md shadow-xs placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-accent-500 focus:border-accent-500"
+            className="w-full px-3 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
           />
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
             Description <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -99,35 +101,35 @@ function ProjectCardEditor({
             value={project.description}
             onChange={(e) => handleFieldChange('description', e.target.value)}
             placeholder="Describe the architecture, problem solved, impact, and engineering techniques used..."
-            className="w-full px-3 py-2 text-sm text-gray-900 bg-white border border-gray-300 rounded-md shadow-xs placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-accent-500 focus:border-accent-500 resize-y"
+            className="w-full px-3 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand resize-y"
           />
         </div>
 
         {/* Tags / Technologies */}
         <div>
-          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
             Technologies & Tags
           </label>
 
           {/* Current tags */}
           <div className="flex flex-wrap gap-2 mb-2 min-h-[30px] items-center">
             {project.tags.length === 0 ? (
-              <span className="text-xs text-gray-400 italic">No tags added yet.</span>
+              <span className="text-xs text-text-muted/60 italic">No tags added yet.</span>
             ) : (
               project.tags.map((tag, tIdx) => (
                 <span
                   key={tIdx}
-                  className="inline-flex items-center gap-1.5 bg-white text-gray-700 text-xs font-mono px-2 py-0.5 rounded border border-gray-200 shadow-xs"
+                  className="inline-flex items-center gap-1.5 bg-card text-text-main text-xs font-mono px-2.5 py-1 rounded-lg border border-border-subtle shadow-xs"
                 >
                   {tag}
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tIdx)}
-                    className="text-gray-400 hover:text-red-500 transition-colors p-0.5 cursor-pointer"
+                    className="text-text-muted hover:text-red-500 hover:bg-red-50 p-0.5 rounded active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-red-500"
                     title="Remove tag"
                     aria-label={`Remove tag ${tag}`}
                   >
-                    <Icon d={xMarkD} className="w-3 h-3" />
+                    <X className="w-3 h-3" />
                   </button>
                 </span>
               ))
@@ -142,15 +144,15 @@ function ProjectCardEditor({
               onChange={(e) => setNewTag(e.target.value)}
               onKeyDown={handleTagKeyDown}
               placeholder="Add tech tag (e.g. REACT, PYTHON)..."
-              className="flex-1 px-3 py-1.5 text-xs text-gray-900 bg-white border border-gray-300 rounded-md shadow-xs placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-accent-500 focus:border-accent-500 uppercase font-mono"
+              className="flex-1 px-3.5 py-2 text-xs text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand uppercase font-mono"
             />
             <button
               type="button"
               onClick={handleAddTag}
               disabled={!newTag.trim()}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-md bg-accent-500 text-white hover:bg-accent-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-accent-500"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-brand text-white hover:bg-brand-hover active:scale-95 active:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             >
-              <Icon d={plusD} className="w-3.5 h-3.5" />
+              <Plus className="w-3.5 h-3.5" />
               Add Tag
             </button>
           </div>
@@ -182,34 +184,34 @@ export default function ProjectsEditSection({ projects, onChange }: ProjectsEdit
   }
 
   return (
-    <Card as="section" className="p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-100 pb-4 mb-6">
+    <Card as="section" className="p-6 sm:p-7">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-border-subtle pb-4 mb-6">
         <div>
-          <h2 className="text-lg font-bold text-gray-900">Featured Projects</h2>
-          <p className="text-xs text-gray-500 mt-1">
+          <h2 className="text-xl font-bold tracking-tight text-text-main">Featured Projects</h2>
+          <p className="text-xs text-text-muted mt-1">
             Highlight your top software projects, architectures, and technical accomplishments.
           </p>
         </div>
         <button
           type="button"
           onClick={handleAddProject}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-md bg-accent-500 text-white hover:bg-accent-600 active:bg-accent-700 transition-colors shadow-xs shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-accent-500"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-xl bg-brand text-white hover:bg-brand-hover active:scale-95 active:bg-brand-dark transition-all duration-150 shadow-xs shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
-          <Icon d={plusD} className="w-3.5 h-3.5" />
+          <Plus className="w-3.5 h-3.5" />
           Add Project
         </button>
       </div>
 
       <div className="space-y-6">
         {projects.length === 0 ? (
-          <div className="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-            <p className="text-sm text-gray-500 mb-3">No projects added yet.</p>
+          <div className="text-center py-8 bg-bg-page rounded-2xl border border-dashed border-border-muted">
+            <p className="text-sm text-text-muted mb-3">No projects added yet.</p>
             <button
               type="button"
               onClick={handleAddProject}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-card border border-border-subtle text-text-main hover:bg-bg-page hover:border-border-muted active:scale-95 active:bg-border-subtle transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             >
-              <Icon d={plusD} className="w-3.5 h-3.5" />
+              <Plus className="w-3.5 h-3.5" />
               Add First Project
             </button>
           </div>

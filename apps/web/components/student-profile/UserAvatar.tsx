@@ -38,7 +38,7 @@ export default function UserAvatar({
         size={size}
         round={round}
         textSizeRatio={textSizeRatio}
-        color="#10b981"
+        color="#00c26d"
         fgColor="#ffffff"
         className="w-full h-full object-cover"
       />

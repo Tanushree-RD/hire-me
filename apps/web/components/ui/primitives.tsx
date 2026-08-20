@@ -50,7 +50,7 @@ export function Icon({
 /*  Card                                                               */
 /* ------------------------------------------------------------------ */
 
-/** Reusable white card with rounded corners, shadow, and border. */
+/** Reusable card container matching Landing, Login, and Onboarding surfaces. */
 export function Card({
   children,
   className = '',
@@ -62,7 +62,7 @@ export function Card({
 }) {
   return (
     <Tag
-      className={`bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] border border-gray-100 transition-shadow duration-150 ease-in-out hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] ${className}`}
+      className={`bg-card rounded-2xl sm:rounded-3xl shadow-[0_6px_30px_-6px_rgba(0,0,0,0.05)] border border-border-subtle transition-all duration-200 ease-in-out ${className}`}
     >
       {children}
     </Tag>
@@ -73,9 +73,13 @@ export function Card({
 /*  SectionHeading                                                     */
 /* ------------------------------------------------------------------ */
 
-/** Consistent section heading used above card groups. */
+/** Consistent section heading matching Landing and Onboarding header typography. */
 export function SectionHeading({ children }: { children: ReactNode }) {
-  return <h2 className="text-base font-bold text-gray-900 mb-3">{children}</h2>
+  return (
+    <h2 className="text-lg sm:text-xl font-bold tracking-tight text-text-main mb-3.5">
+      {children}
+    </h2>
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -91,11 +95,11 @@ export function Pill({
   variant?: 'default' | 'outline'
 }) {
   const base =
-    'text-xs font-mono px-2 py-0.5 rounded inline-block transition-all duration-150 ease-in-out'
+    'text-xs font-mono px-2.5 py-0.5 rounded inline-block transition-all duration-150 ease-in-out'
   const styles =
     variant === 'outline'
-      ? 'bg-gray-50 text-gray-700 px-2.5 py-1 rounded border border-gray-200 hover:-translate-y-0.5 hover:shadow-sm'
-      : 'bg-gray-100 text-gray-600 border border-gray-200'
+      ? 'bg-brand-light text-brand-dark rounded border border-brand-mint/50 hover:-translate-y-0.5 hover:shadow-xs'
+      : 'bg-bg-page text-text-muted border border-border-subtle'
 
   return <span className={`${base} ${styles}`}>{children}</span>
 }
@@ -113,7 +117,7 @@ export function Badge({
   variant?: 'emerald'
 }) {
   const styles = {
-    emerald: 'text-accent-600 bg-accent-50 border border-accent-200',
+    emerald: 'text-brand-dark bg-brand-light border border-brand-mint',
   }
 
   return (

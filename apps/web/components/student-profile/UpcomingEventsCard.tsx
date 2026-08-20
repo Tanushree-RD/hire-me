@@ -15,19 +15,19 @@ const defaultEvents: UpcomingEvent[] = [
 /** A single event entry. */
 function EventEntry({ event }: { event: UpcomingEvent }) {
   return (
-    <article className="border-l-[3px] border-accent-500 pl-4 py-1">
+    <article className="border-l-[3px] border-brand pl-4 py-2 bg-bg-page/50 rounded-r-2xl border border-border-subtle hover:bg-bg-page hover:border-brand/40 transition-all duration-200">
       <div className="flex items-center gap-2 mb-1 flex-wrap">
-        <time className="text-xs font-bold text-accent-600 uppercase tracking-wide">
+        <time className="text-xs font-bold text-brand-dark uppercase tracking-wider">
           {event.date}
         </time>
         {event.isVirtual && <Badge variant="emerald">Virtual</Badge>}
       </div>
-      <h3 className="font-semibold text-gray-900 text-sm mb-0.5">{event.title}</h3>
-      <p className="text-xs text-gray-500 leading-relaxed mb-2">{event.description}</p>
+      <h3 className="font-bold text-text-main text-sm mb-1">{event.title}</h3>
+      <p className="text-xs text-text-muted leading-relaxed mb-2.5">{event.description}</p>
       {event.href && (
         <Link
           href={event.href}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-accent-600 hover:text-accent-700 transition-colors duration-150"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-dark hover:text-brand transition-colors duration-150"
         >
           Register →
         </Link>
@@ -42,9 +42,9 @@ export default function UpcomingEventsCard({
   events?: UpcomingEvent[]
 }) {
   return (
-    <Card as="section" className="p-5">
-      <h2 className="text-base font-bold text-gray-900 mb-3">Upcoming Events</h2>
-      <div className="space-y-3">
+    <Card as="section" className="p-6 sm:p-7">
+      <h2 className="text-lg font-bold text-text-main tracking-tight mb-4">Upcoming Events</h2>
+      <div className="space-y-3.5">
         {events.map((event, idx) => (
           <EventEntry key={idx} event={event} />
         ))}

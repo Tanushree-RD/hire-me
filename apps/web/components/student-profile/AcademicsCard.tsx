@@ -1,5 +1,5 @@
-import { Icon, Card } from '@/components/ui/primitives'
-import { calendarD } from '@/components/ui/icons'
+import { Calendar } from 'lucide-react'
+import { Card } from '@/components/ui/primitives'
 import type { AcademicData } from './types'
 
 const defaultAcademics: AcademicData = {
@@ -14,8 +14,8 @@ const defaultAcademics: AcademicData = {
 function AcademicRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start justify-between py-2.5 first:pt-0">
-      <dt className="text-sm text-gray-500">{label}</dt>
-      <dd className="text-sm font-semibold text-gray-900 text-right">{value}</dd>
+      <dt className="text-sm text-text-muted font-normal">{label}</dt>
+      <dd className="text-sm font-semibold text-text-main text-right">{value}</dd>
     </div>
   )
 }
@@ -33,24 +33,24 @@ export default function AcademicsCard({
   ]
 
   return (
-    <Card as="section" className="p-5">
-      <h2 className="text-base font-bold text-gray-900 mb-3">Academics</h2>
+    <Card as="section" className="p-6 sm:p-7">
+      <h2 className="text-lg font-bold text-text-main tracking-tight mb-4">Academics</h2>
 
-      <dl className="divide-y divide-gray-100">
+      <dl className="divide-y divide-border-subtle">
         {rows.map((row) => (
           <AcademicRow key={row.label} label={row.label} value={row.value} />
         ))}
       </dl>
 
-      {/* Expected Graduation Badge */}
-      <div className="mt-3 bg-accent-50 rounded-lg p-3 text-center">
+      {/* Expected Graduation Badge Container */}
+      <div className="mt-4 bg-brand-light/80 rounded-2xl p-4 text-center border border-brand-mint/50 transition-all hover:bg-brand-light">
         <div className="flex items-center justify-center gap-2 mb-1">
-          <Icon d={calendarD} className="w-4 h-4 text-accent-600" />
-          <span className="text-xs font-bold text-accent-600 uppercase tracking-wider">
+          <Calendar className="w-4 h-4 text-brand-dark" />
+          <span className="text-xs font-bold text-brand-dark uppercase tracking-wider">
             Expected Graduation
           </span>
         </div>
-        <p className="text-sm font-semibold text-gray-900">
+        <p className="text-sm font-bold text-text-main">
           <time>{academics.expectedGraduation}</time>
         </p>
       </div>

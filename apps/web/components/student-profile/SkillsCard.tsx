@@ -1,4 +1,5 @@
-import { Icon, Card, Pill } from '@/components/ui/primitives'
+import { Code2, Wrench, Database } from 'lucide-react'
+import { Card, Pill } from '@/components/ui/primitives'
 import { codeD, wrenchD, databaseD } from '@/components/ui/icons'
 import type { SkillCategory } from './types'
 
@@ -20,13 +21,21 @@ const defaultCategories: SkillCategory[] = [
   },
 ]
 
+function getCategoryIcon(label: string) {
+  if (label.includes('LANG')) return Code2
+  if (label.includes('DATA')) return Database
+  return Wrench
+}
+
 /** A single skill category group with label and pills. */
 function SkillGroup({ category }: { category: SkillCategory }) {
+  const CategoryIcon = getCategoryIcon(category.label)
+
   return (
     <div role="group" aria-label={`${category.label} skills`}>
       <div className="flex items-center gap-1.5 mb-2">
-        <Icon d={category.iconD} className="w-4 h-4 text-gray-500" />
-        <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+        <CategoryIcon className="w-4 h-4 text-text-muted" />
+        <span className="text-xs font-bold text-text-muted uppercase tracking-wider">
           {category.label}
         </span>
       </div>
@@ -47,8 +56,8 @@ export default function SkillsCard({
   categories?: SkillCategory[]
 }) {
   return (
-    <Card as="section" className="p-5">
-      <h2 className="text-base font-bold text-gray-900 mb-3">Skills Architecture</h2>
+    <Card as="section" className="p-6 sm:p-7">
+      <h2 className="text-lg font-bold text-text-main tracking-tight mb-4">Skills Architecture</h2>
       <div className="space-y-4">
         {categories.map((cat) => (
           <SkillGroup key={cat.label} category={cat} />

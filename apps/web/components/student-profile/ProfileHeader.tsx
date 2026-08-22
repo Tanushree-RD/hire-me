@@ -103,7 +103,9 @@ export default function ProfileHeader({ profile = defaultProfile }: { profile?: 
               {profile.location}
             </ContactDetail>
 
-            <ContactDetail icon={<Icon d={githubD} className="w-3.5 h-3.5 shrink-0" fill="currentColor" />}>
+            <ContactDetail
+              icon={<Icon d={githubD} className="w-3.5 h-3.5 shrink-0" fill="currentColor" />}
+            >
               <a
                 href={`https://${profile.github}`}
                 target="_blank"

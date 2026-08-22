@@ -50,12 +50,8 @@ export default function Sidebar() {
         {/* Logo */}
         <div className="flex items-center justify-between gap-1.5 px-4 py-3.5 border-b border-border-subtle">
           <Link href="/" className="flex items-center gap-1 group" aria-label="CareerLink home">
-            <span className="text-base font-black tracking-tight text-brand font-mono">
-              DK24
-            </span>
-            <span className="text-sm font-extrabold tracking-tight text-text-main">
-              CareerLink
-            </span>
+            <span className="text-base font-black tracking-tight text-brand font-mono">DK24</span>
+            <span className="text-sm font-extrabold tracking-tight text-text-main">CareerLink</span>
           </Link>
 
           {/* Mobile close button */}

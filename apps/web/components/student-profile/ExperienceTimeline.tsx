@@ -43,7 +43,9 @@ function TimelineEntry({ experience, isLast }: { experience: Experience; isLast:
       {/* Content */}
       <div className={`flex-1 min-w-0 ${isLast ? 'pb-0' : 'pb-6'}`}>
         <div className="flex items-center justify-between gap-3 mb-1">
-          <h3 className="font-bold text-text-main text-sm sm:text-base tracking-tight">{experience.title}</h3>
+          <h3 className="font-bold text-text-main text-sm sm:text-base tracking-tight">
+            {experience.title}
+          </h3>
           <Pill>
             <time className="font-mono">{experience.duration}</time>
           </Pill>

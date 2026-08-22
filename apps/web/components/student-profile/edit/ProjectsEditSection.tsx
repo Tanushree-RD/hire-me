@@ -18,12 +18,7 @@ interface ProjectCardEditorProps {
 }
 
 /** Individual Project Card Editor with tag management */
-function ProjectCardEditor({
-  project,
-  index,
-  onUpdate,
-  onDelete,
-}: ProjectCardEditorProps) {
+function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEditorProps) {
   const [newTag, setNewTag] = useState('')
 
   const handleFieldChange = (field: keyof Project, value: unknown) => {

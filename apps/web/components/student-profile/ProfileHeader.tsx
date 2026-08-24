@@ -8,16 +8,6 @@ import { githubD, verifiedCheckPaths } from '@/components/ui/icons'
 import UserAvatar from './UserAvatar'
 import type { ProfileData } from './types'
 
-const defaultProfile: ProfileData = {
-  name: 'Alex Mercer',
-  degree: "B.S. Computer Science, Stanford University '25",
-  location: 'San Francisco, CA',
-  github: 'github.com/alexm',
-  email: 'alex@example.edu',
-  photoUrl: '',
-  isVerified: true,
-}
-
 /** A single contact-info item (location, github, email). */
 function ContactDetail({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
@@ -28,7 +18,7 @@ function ContactDetail({ icon, children }: { icon: React.ReactNode; children: Re
   )
 }
 
-export default function ProfileHeader({ profile = defaultProfile }: { profile?: ProfileData }) {
+export default function ProfileHeader({ profile }: { profile: ProfileData }) {
   const [photoUrl, setPhotoUrl] = useState<string>(profile.photoUrl)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -128,14 +118,25 @@ export default function ProfileHeader({ profile = defaultProfile }: { profile?: 
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3" role="group" aria-label="Profile actions">
-            <a
-              href="/alex-mercer-resume.pdf"
-              download="Alex_Mercer_Resume.pdf"
-              className="inline-flex items-center gap-2 bg-brand text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-hover active:bg-brand-dark active:scale-[0.98] transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-            >
-              <Download className="w-4 h-4" strokeWidth={2} />
-              Download Resume
-            </a>
+            {profile.resumeLink ? (
+              <a
+                href={profile.resumeLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-brand text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-hover active:bg-brand-dark active:scale-[0.98] transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              >
+                <Download className="w-4 h-4" strokeWidth={2} />
+                Download Resume
+              </a>
+            ) : (
+              <span
+                aria-disabled="true"
+                className="inline-flex items-center gap-2 bg-border-subtle text-text-muted px-5 py-2.5 rounded-xl text-sm font-semibold cursor-not-allowed opacity-60 shadow-xs"
+              >
+                <Download className="w-4 h-4" strokeWidth={2} />
+                Download Resume
+              </span>
+            )}
             <Link
               href="/student/profile/edit"
               className="inline-flex items-center gap-2 bg-card text-text-main px-5 py-2.5 rounded-xl text-sm font-semibold border border-border-subtle hover:bg-bg-page hover:border-border-muted active:bg-border-subtle active:scale-[0.98] transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"

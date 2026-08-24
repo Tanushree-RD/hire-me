@@ -19,6 +19,7 @@ export const defaultProfile: ProfileData = {
   location: 'San Francisco, CA',
   github: 'github.com/alexm',
   email: 'alex@example.edu',
+  resumeLink: '',
   photoUrl: '',
   isVerified: true,
 }

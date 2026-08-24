@@ -15,6 +15,14 @@ import { useProfile } from '@/components/student-profile/ProfileContext'
 export default function StudentProfileView() {
   const { profile, experiences, projects, skills, academics } = useProfile()
 
+  const hasExperiences = experiences.length > 0
+  const hasProjects = projects.length > 0
+  const hasSkills = skills.length > 0
+
+  // The right sidebar renders when at least one of its sections has content.
+  // Academics is always assumed present; skills may be empty.
+  const hasRightColumn = hasSkills || true // academics always shown
+
   return (
     <div className="min-h-screen bg-bg-page flex">
       {/* Left Sidebar */}
@@ -35,19 +43,27 @@ export default function StudentProfileView() {
 
         {/* Page Content */}
         <main className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl mx-auto animate-fade-in">
-          <div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-6 sm:gap-7">
+          <div
+            className={
+              hasRightColumn
+                ? 'grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-6 sm:gap-7'
+                : 'grid grid-cols-1 gap-6 sm:gap-7'
+            }
+          >
             {/* Left Column: Profile, Experience, Projects */}
             <div className="space-y-6 sm:space-y-7 min-w-0">
               <ProfileHeader profile={profile} />
-              <ExperienceTimeline experiences={experiences} />
-              <ProjectsGrid projects={projects} />
+              {hasExperiences && <ExperienceTimeline experiences={experiences} />}
+              {hasProjects && <ProjectsGrid projects={projects} />}
             </div>
 
             {/* Right Column: Skills, Academics */}
-            <aside className="space-y-6 sm:space-y-7" aria-label="Profile sidebar">
-              <SkillsCard categories={skills} />
-              <AcademicsCard academics={academics} />
-            </aside>
+            {hasRightColumn && (
+              <aside className="space-y-6 sm:space-y-7" aria-label="Profile sidebar">
+                {hasSkills && <SkillsCard categories={skills} />}
+                <AcademicsCard academics={academics} />
+              </aside>
+            )}
           </div>
         </main>
 

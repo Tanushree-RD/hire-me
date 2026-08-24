@@ -106,7 +106,7 @@ export default function EditProfileForm() {
 
           {/* Edit Form */}
           <form onSubmit={handleSave} className="space-y-6 sm:space-y-8">
-            {/* 1. Basic Information & Photo */}
+            {/* 1. Basic Information */}
             <BasicInfoSection
               data={formData.profile}
               onChange={(updatedProfile) =>
@@ -146,30 +146,6 @@ export default function EditProfileForm() {
               }
             />
 
-            {/* Bottom Sticky Action Bar */}
-            <div className="sticky bottom-4 z-20 bg-card/95 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-border-subtle shadow-lg flex items-center justify-between gap-4">
-              <p className="text-xs text-text-muted hidden sm:block">
-                All changes will be updated in your profile session.
-              </p>
-
-              <div className="flex items-center gap-3 ml-auto">
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="px-5 py-2.5 text-sm font-semibold text-text-main bg-card border border-border-subtle rounded-xl hover:bg-bg-page hover:border-border-muted active:scale-95 active:bg-border-subtle transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand-hover active:scale-95 active:bg-brand-dark transition-all duration-150 shadow-md cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-                >
-                  <Check className="w-4 h-4" strokeWidth={2} />
-                  Save Changes
-                </button>
-              </div>
-            </div>
           </form>
         </main>
 

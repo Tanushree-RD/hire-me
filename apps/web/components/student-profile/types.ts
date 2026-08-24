@@ -11,6 +11,7 @@ export interface ProfileData {
   location: string
   github: string
   email: string
+  resumeLink?: string
   photoUrl: string
   isVerified: boolean
 }

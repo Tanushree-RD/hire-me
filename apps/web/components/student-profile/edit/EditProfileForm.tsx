@@ -145,7 +145,6 @@ export default function EditProfileForm() {
                 setFormData((prev) => ({ ...prev, academics: updatedAcademics }))
               }
             />
-
           </form>
         </main>
 

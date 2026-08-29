@@ -1,12 +1,7 @@
 'use client'
 
 import { Card } from '@/components/ui/primitives'
-import type { ProfileData } from '../types'
-
-interface BasicInfoSectionProps {
-  data: ProfileData
-  onChange: (profile: ProfileData) => void
-}
+import type { BasicInfoSectionProps, ProfileData } from '../types'
 
 export default function BasicInfoSection({ data, onChange }: BasicInfoSectionProps) {
   const handleFieldChange = (field: keyof ProfileData, value: string) => {
@@ -22,9 +17,7 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
         </p>
       </div>
 
-      {/* Form Fields Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-        {/* Full Name */}
         <div className="sm:col-span-2">
           <label
             htmlFor="edit-name"
@@ -43,7 +36,6 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
           />
         </div>
 
-        {/* Headline / Degree */}
         <div className="sm:col-span-2">
           <label
             htmlFor="edit-degree"
@@ -62,7 +54,6 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
           />
         </div>
 
-        {/* University */}
         <div>
           <label
             htmlFor="edit-university"
@@ -80,7 +71,6 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
           />
         </div>
 
-        {/* Graduation Year */}
         <div>
           <label
             htmlFor="edit-grad-year"
@@ -98,7 +88,6 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
           />
         </div>
 
-        {/* Location */}
         <div>
           <label
             htmlFor="edit-location"
@@ -116,7 +105,6 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
           />
         </div>
 
-        {/* GitHub URL */}
         <div>
           <label
             htmlFor="edit-github"
@@ -134,7 +122,6 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
           />
         </div>
 
-        {/* Email */}
         <div className="sm:col-span-2">
           <label
             htmlFor="edit-email"
@@ -152,7 +139,6 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
           />
         </div>
 
-        {/* Resume Link */}
         <div className="sm:col-span-2">
           <label
             htmlFor="edit-resume-link"

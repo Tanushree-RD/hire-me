@@ -3,12 +3,7 @@
 import { useState, type KeyboardEvent } from 'react'
 import { Plus, Trash2, X } from 'lucide-react'
 import { Card } from '@/components/ui/primitives'
-import type { Project } from '../types'
-
-interface ProjectsEditSectionProps {
-  projects: Project[]
-  onChange: (projects: Project[]) => void
-}
+import type { Project, ProjectsEditSectionProps } from '../types'
 
 interface ProjectCardEditorProps {
   project: Project
@@ -17,7 +12,6 @@ interface ProjectCardEditorProps {
   onDelete: (index: number) => void
 }
 
-/** Individual Project Card Editor with tag management */
 function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEditorProps) {
   const [newTag, setNewTag] = useState('')
 
@@ -52,7 +46,6 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
 
   return (
     <div className="p-5 sm:p-6 rounded-2xl bg-bg-page border border-border-subtle transition-all duration-200 hover:border-border-muted hover:shadow-xs">
-      {/* Project Card Header */}
       <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-border-subtle">
         <span className="text-xs font-bold text-brand-dark bg-brand-light px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-brand-mint/50">
           Project #{index + 1}
@@ -70,7 +63,6 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
       </div>
 
       <div className="space-y-4">
-        {/* Title */}
         <div>
           <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
             Project Title <span className="text-red-500">*</span>
@@ -85,7 +77,6 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
           />
         </div>
 
-        {/* Description */}
         <div>
           <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
             Description <span className="text-red-500">*</span>
@@ -100,13 +91,11 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
           />
         </div>
 
-        {/* Tags / Technologies */}
         <div>
           <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
             Technologies & Tags
           </label>
 
-          {/* Current tags */}
           <div className="flex flex-wrap gap-2 mb-2 min-h-[30px] items-center">
             {project.tags.length === 0 ? (
               <span className="text-xs text-text-muted/60 italic">No tags added yet.</span>
@@ -131,7 +120,6 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
             )}
           </div>
 
-          {/* Add Tag Input */}
           <div className="flex items-center gap-2">
             <input
               type="text"

@@ -27,4 +27,11 @@ export type {
   FullProfileState,
   NavItem,
   UpcomingEvent,
+  UserAvatarProps,
+  ProfileContextValue,
+  BasicInfoSectionProps,
+  AcademicsEditSectionProps,
+  ExperienceEditSectionProps,
+  ProjectsEditSectionProps,
+  SkillsEditSectionProps,
 } from './types'

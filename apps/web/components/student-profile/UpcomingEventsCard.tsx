@@ -12,7 +12,6 @@ const defaultEvents: UpcomingEvent[] = [
   },
 ]
 
-/** A single event entry. */
 function EventEntry({ event }: { event: UpcomingEvent }) {
   return (
     <article className="border-l-[3px] border-brand pl-4 py-2 bg-bg-page/50 rounded-r-2xl border border-border-subtle hover:bg-bg-page hover:border-brand/40 transition-all duration-200">

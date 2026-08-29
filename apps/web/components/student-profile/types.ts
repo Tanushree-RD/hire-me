@@ -66,9 +66,58 @@ export interface UpcomingEvent {
   href?: string
 }
 
+export interface UserAvatarProps {
+  name: string
+  photoUrl?: string
+  size?: string
+  className?: string
+  round?: boolean | string
+  textSizeRatio?: number
+}
+
 export interface NavItem {
   label: string
   href: string
   iconD?: string
   iconPaths?: import('react').ComponentProps<'path'>[]
+}
+
+export interface BasicInfoSectionProps {
+  data: ProfileData
+  onChange: (profile: ProfileData) => void
+}
+
+export interface AcademicsEditSectionProps {
+  academics: AcademicData
+  onChange: (academics: AcademicData) => void
+}
+
+export interface ExperienceEditSectionProps {
+  experiences: Experience[]
+  onChange: (experiences: Experience[]) => void
+}
+
+export interface ProjectsEditSectionProps {
+  projects: Project[]
+  onChange: (projects: Project[]) => void
+}
+
+export interface SkillsEditSectionProps {
+  categories: SkillCategory[]
+  onChange: (categories: SkillCategory[]) => void
+}
+
+export interface ProfileContextValue {
+  profile: ProfileData
+  experiences: Experience[]
+  projects: Project[]
+  skills: SkillCategory[]
+  academics: AcademicData
+  setProfile: (profile: ProfileData | ((prev: ProfileData) => ProfileData)) => void
+  setExperiences: (experiences: Experience[] | ((prev: Experience[]) => Experience[])) => void
+  setProjects: (projects: Project[] | ((prev: Project[]) => Project[])) => void
+  setSkills: (skills: SkillCategory[] | ((prev: SkillCategory[]) => SkillCategory[])) => void
+  setAcademics: (academics: AcademicData | ((prev: AcademicData) => AcademicData)) => void
+  saveAll: (data: FullProfileState) => void
+  resetToDefault: () => void
 }

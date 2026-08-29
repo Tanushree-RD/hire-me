@@ -8,7 +8,6 @@ import { githubD, verifiedCheckPaths } from '@/components/ui/icons'
 import UserAvatar from './UserAvatar'
 import type { ProfileData } from './types'
 
-/** A single contact-info item (location, github, email). */
 function ContactDetail({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <span className="inline-flex items-center gap-1.5">
@@ -39,7 +38,6 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
   return (
     <Card as="section" className="p-6 sm:p-7">
       <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-6">
-        {/* Profile Photo with react-avatar */}
         <figure className="relative shrink-0 w-[88px] h-[88px]">
           <input
             ref={fileInputRef}
@@ -66,7 +64,6 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
           </button>
         </figure>
 
-        {/* Profile Info */}
         <div className="flex-1 min-w-0 pt-0.5">
           <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
             <h1 className="text-2xl font-extrabold text-text-main tracking-tight leading-tight">
@@ -116,7 +113,6 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
             </ContactDetail>
           </address>
 
-          {/* Action Buttons */}
           <div className="flex flex-wrap gap-3" role="group" aria-label="Profile actions">
             {profile.resumeLink ? (
               <a

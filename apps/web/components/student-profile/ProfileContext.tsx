@@ -9,6 +9,7 @@ import type {
   SkillCategory,
   AcademicData,
   FullProfileState,
+  ProfileContextValue,
 } from './types'
 
 export const defaultProfile: ProfileData = {
@@ -96,21 +97,6 @@ export const defaultAcademics: AcademicData = {
   minor: 'Mathematics',
   honors: "Dean's List (All Semesters)",
   expectedGraduation: 'May 2025',
-}
-
-interface ProfileContextValue {
-  profile: ProfileData
-  experiences: Experience[]
-  projects: Project[]
-  skills: SkillCategory[]
-  academics: AcademicData
-  setProfile: (profile: ProfileData | ((prev: ProfileData) => ProfileData)) => void
-  setExperiences: (experiences: Experience[] | ((prev: Experience[]) => Experience[])) => void
-  setProjects: (projects: Project[] | ((prev: Project[]) => Project[])) => void
-  setSkills: (skills: SkillCategory[] | ((prev: SkillCategory[]) => SkillCategory[])) => void
-  setAcademics: (academics: AcademicData | ((prev: AcademicData) => AcademicData)) => void
-  saveAll: (data: FullProfileState) => void
-  resetToDefault: () => void
 }
 
 const ProfileContext = createContext<ProfileContextValue | null>(null)

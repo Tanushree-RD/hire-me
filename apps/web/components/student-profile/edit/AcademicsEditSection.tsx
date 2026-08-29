@@ -1,12 +1,7 @@
 'use client'
 
 import { Card } from '@/components/ui/primitives'
-import type { AcademicData } from '../types'
-
-interface AcademicsEditSectionProps {
-  academics: AcademicData
-  onChange: (academics: AcademicData) => void
-}
+import type { AcademicData, AcademicsEditSectionProps } from '../types'
 
 export default function AcademicsEditSection({ academics, onChange }: AcademicsEditSectionProps) {
   const handleFieldChange = (field: keyof AcademicData, value: string) => {
@@ -23,7 +18,6 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-        {/* GPA */}
         <div>
           <label
             htmlFor="edit-gpa"
@@ -42,7 +36,6 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
           />
         </div>
 
-        {/* Expected Graduation Date */}
         <div>
           <label
             htmlFor="edit-expected-grad"
@@ -61,7 +54,6 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
           />
         </div>
 
-        {/* Major */}
         <div>
           <label
             htmlFor="edit-major"
@@ -80,7 +72,6 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
           />
         </div>
 
-        {/* Minor */}
         <div>
           <label
             htmlFor="edit-minor"
@@ -98,7 +89,6 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
           />
         </div>
 
-        {/* Honors */}
         <div className="sm:col-span-2">
           <label
             htmlFor="edit-honors"

@@ -1,5 +1,6 @@
 import { MapPin } from 'lucide-react'
 import { Card, SectionHeading, Pill } from '@/components/ui/primitives'
+import { cn } from '@/lib/utils'
 import type { Experience } from './types'
 
 const defaultExperiences: Experience[] = [
@@ -27,21 +28,18 @@ const defaultExperiences: Experience[] = [
   },
 ]
 
-/** A single experience entry in the timeline. */
 function TimelineEntry({ experience, isLast }: { experience: Experience; isLast: boolean }) {
   return (
     <article
       className="relative flex gap-4"
       aria-label={`${experience.title} at ${experience.company}`}
     >
-      {/* Timeline connector */}
       <div className="flex flex-col items-center shrink-0" aria-hidden="true">
         <div className="w-3 h-3 rounded-full bg-brand mt-1.5 shrink-0 z-10 shadow-xs" />
         {!isLast && <div className="w-0.5 bg-border-subtle flex-1 mt-1" />}
       </div>
 
-      {/* Content */}
-      <div className={`flex-1 min-w-0 ${isLast ? 'pb-0' : 'pb-6'}`}>
+      <div className={cn('flex-1 min-w-0', isLast ? 'pb-0' : 'pb-6')}>
         <div className="flex items-center justify-between gap-3 mb-1">
           <h3 className="font-bold text-text-main text-sm sm:text-base tracking-tight">
             {experience.title}

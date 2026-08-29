@@ -47,12 +47,9 @@ export default function EditProfileForm() {
 
   return (
     <div className="min-h-screen bg-bg-page flex">
-      {/* Left Sidebar */}
       <Sidebar />
 
-      {/* Main Content Area */}
       <div className="flex-1 lg:ml-[160px]">
-        {/* Top Bar */}
         <header className="sticky top-0 z-20 bg-card/90 backdrop-blur-md border-b border-border-subtle px-5 py-2.5 flex items-center justify-between shadow-xs">
           <Link
             href="/student/profile"
@@ -71,9 +68,7 @@ export default function EditProfileForm() {
           </a>
         </header>
 
-        {/* Page Content */}
         <main className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-4xl mx-auto animate-fade-in">
-          {/* Header Title Banner */}
           <div className="mb-6 sm:mb-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
@@ -83,7 +78,6 @@ export default function EditProfileForm() {
                 </p>
               </div>
 
-              {/* Quick actions at the top as well */}
               <div className="flex items-center gap-3">
                 <button
                   type="button"
@@ -104,9 +98,7 @@ export default function EditProfileForm() {
             </div>
           </div>
 
-          {/* Edit Form */}
           <form onSubmit={handleSave} className="space-y-6 sm:space-y-8">
-            {/* 1. Basic Information */}
             <BasicInfoSection
               data={formData.profile}
               onChange={(updatedProfile) =>
@@ -114,7 +106,6 @@ export default function EditProfileForm() {
               }
             />
 
-            {/* 2. Skills Architecture */}
             <SkillsEditSection
               categories={formData.skills}
               onChange={(updatedSkills) =>
@@ -122,7 +113,6 @@ export default function EditProfileForm() {
               }
             />
 
-            {/* 3. Work Experience */}
             <ExperienceEditSection
               experiences={formData.experiences}
               onChange={(updatedExperiences) =>
@@ -130,7 +120,6 @@ export default function EditProfileForm() {
               }
             />
 
-            {/* 4. Projects */}
             <ProjectsEditSection
               projects={formData.projects}
               onChange={(updatedProjects) =>
@@ -138,7 +127,6 @@ export default function EditProfileForm() {
               }
             />
 
-            {/* 5. Academics */}
             <AcademicsEditSection
               academics={formData.academics}
               onChange={(updatedAcademics) =>
@@ -148,7 +136,6 @@ export default function EditProfileForm() {
           </form>
         </main>
 
-        {/* Footer */}
         <Footer />
       </div>
     </div>

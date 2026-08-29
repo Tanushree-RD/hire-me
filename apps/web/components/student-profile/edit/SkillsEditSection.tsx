@@ -3,12 +3,7 @@
 import { useState, type KeyboardEvent } from 'react'
 import { Code2, Wrench, Database, Check, Pencil, X, Plus } from 'lucide-react'
 import { Card } from '@/components/ui/primitives'
-import type { SkillCategory } from '../types'
-
-interface SkillsEditSectionProps {
-  categories: SkillCategory[]
-  onChange: (categories: SkillCategory[]) => void
-}
+import type { SkillCategory, SkillsEditSectionProps } from '../types'
 
 interface SkillCategoryEditorProps {
   category: SkillCategory
@@ -22,7 +17,6 @@ function getCategoryIcon(label: string) {
   return Wrench
 }
 
-/** Individual Category Skill Editor */
 function SkillCategoryEditor({
   category,
   categoryIndex,
@@ -95,7 +89,6 @@ function SkillCategoryEditor({
 
   return (
     <div className="p-5 rounded-2xl bg-bg-page border border-border-subtle hover:border-border-muted transition-all duration-200 space-y-3.5">
-      {/* Category Header */}
       <div className="flex items-center gap-2">
         <CategoryIcon className="w-4 h-4 text-brand-dark" />
         <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">
@@ -104,7 +97,6 @@ function SkillCategoryEditor({
         <span className="text-xs text-text-muted/60 font-mono">({category.skills.length})</span>
       </div>
 
-      {/* Skills Pill List */}
       <div className="flex flex-wrap gap-2 min-h-[36px] items-center">
         {category.skills.length === 0 ? (
           <span className="text-xs text-text-muted/60 italic">
@@ -152,7 +144,6 @@ function SkillCategoryEditor({
               >
                 <span>{skill}</span>
 
-                {/* Edit inline button */}
                 <button
                   type="button"
                   onClick={() => handleStartEdit(sIdx, skill)}
@@ -163,7 +154,6 @@ function SkillCategoryEditor({
                   <Pencil className="w-3 h-3" />
                 </button>
 
-                {/* Remove skill button */}
                 <button
                   type="button"
                   onClick={() => handleRemoveSkill(sIdx)}
@@ -179,7 +169,6 @@ function SkillCategoryEditor({
         )}
       </div>
 
-      {/* Add Skill Input */}
       <div className="flex items-center gap-2 pt-1">
         <div className="relative flex-1">
           <input

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Briefcase, FileText, User, Menu, X, type LucideIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import type { NavItem } from './types'
 
 interface SidebarNavItem extends NavItem {
@@ -21,7 +22,6 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile hamburger button */}
       <button
         type="button"
         onClick={() => setMobileOpen(true)}
@@ -31,7 +31,6 @@ export default function Sidebar() {
         <Menu className="w-5 h-5 text-text-main" />
       </button>
 
-      {/* Backdrop */}
       {mobileOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 transition-opacity"
@@ -40,21 +39,19 @@ export default function Sidebar() {
         />
       )}
 
-      {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 z-50 flex flex-col w-[160px] min-h-screen bg-card border-r border-border-subtle transition-transform duration-200 ease-in-out ${
-          mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:z-30`}
+        className={cn(
+          'fixed left-0 top-0 z-50 flex flex-col w-[160px] min-h-screen bg-card border-r border-border-subtle transition-transform duration-200 ease-in-out lg:translate-x-0 lg:z-30',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full',
+        )}
         aria-label="Main navigation"
       >
-        {/* Logo */}
         <div className="flex items-center justify-between gap-1.5 px-4 py-3.5 border-b border-border-subtle">
           <Link href="/" className="flex items-center gap-1 group" aria-label="CareerLink home">
             <span className="text-base font-black tracking-tight text-brand font-mono">DK24</span>
             <span className="text-sm font-extrabold tracking-tight text-text-main">CareerLink</span>
           </Link>
 
-          {/* Mobile close button */}
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
@@ -65,7 +62,6 @@ export default function Sidebar() {
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 px-2.5 py-3.5" aria-label="Sidebar navigation">
           <ul className="space-y-1" role="list">
             {navItems.map((item) => {
@@ -76,11 +72,12 @@ export default function Sidebar() {
                   <Link
                     href={item.href}
                     aria-current={isActive ? 'page' : undefined}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] transition-all duration-150 ease-in-out ${
+                    className={cn(
+                      'w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] transition-all duration-150 ease-in-out',
                       isActive
                         ? 'text-brand-dark bg-brand-light font-semibold border-l-[3px] border-brand shadow-xs'
-                        : 'text-text-muted hover:bg-bg-page hover:text-text-main font-medium'
-                    }`}
+                        : 'text-text-muted hover:bg-bg-page hover:text-text-main font-medium',
+                    )}
                   >
                     <IconComp className="w-4 h-4 shrink-0" />
                     <span className="truncate">{item.label}</span>

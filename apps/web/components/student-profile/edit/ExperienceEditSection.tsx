@@ -2,12 +2,7 @@
 
 import { Plus, Trash2, X } from 'lucide-react'
 import { Card } from '@/components/ui/primitives'
-import type { Experience } from '../types'
-
-interface ExperienceEditSectionProps {
-  experiences: Experience[]
-  onChange: (experiences: Experience[]) => void
-}
+import type { Experience, ExperienceEditSectionProps } from '../types'
 
 export default function ExperienceEditSection({
   experiences,
@@ -124,7 +119,6 @@ export default function ExperienceEditSection({
               key={exp.id || idx}
               className="p-5 sm:p-6 rounded-2xl bg-bg-page border border-border-subtle transition-all duration-200 hover:border-border-muted hover:shadow-xs"
             >
-              {/* Experience Item Header */}
               <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-border-subtle">
                 <span className="text-xs font-bold text-brand-dark bg-brand-light px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-brand-mint/50">
                   Experience #{idx + 1}
@@ -141,9 +135,7 @@ export default function ExperienceEditSection({
                 </button>
               </div>
 
-              {/* Form Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Position / Title */}
                 <div>
                   <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
                     Position / Role <span className="text-red-500">*</span>
@@ -158,7 +150,6 @@ export default function ExperienceEditSection({
                   />
                 </div>
 
-                {/* Company */}
                 <div>
                   <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
                     Company <span className="text-red-500">*</span>
@@ -173,7 +164,6 @@ export default function ExperienceEditSection({
                   />
                 </div>
 
-                {/* Location */}
                 <div>
                   <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
                     Location
@@ -187,7 +177,6 @@ export default function ExperienceEditSection({
                   />
                 </div>
 
-                {/* Duration / Start & End Dates */}
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
@@ -216,7 +205,6 @@ export default function ExperienceEditSection({
                   </div>
                 </div>
 
-                {/* Achievements / Bullet Points */}
                 <div className="sm:col-span-2 space-y-2 mt-1">
                   <label className="block text-xs font-bold text-text-muted uppercase tracking-wider">
                     Description & Achievements (Bullet Points)

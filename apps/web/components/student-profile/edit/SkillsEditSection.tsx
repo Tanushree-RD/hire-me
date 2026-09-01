@@ -175,11 +175,7 @@ function SkillCategoryEditor({
             className="w-full pl-3.5 pr-8 py-2 text-xs text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
-        <Button
-          onClick={handleAddSkill}
-          disabled={!newSkillText.trim()}
-          size="sm"
-        >
+        <Button onClick={handleAddSkill} disabled={!newSkillText.trim()} size="sm">
           <Plus className="w-3.5 h-3.5" />
           Add
         </Button>

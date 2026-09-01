@@ -80,18 +80,10 @@ export default function EditProfileForm() {
               </div>
 
               <div className="flex items-center gap-3">
-                <Button
-                  onClick={handleCancel}
-                  variant="secondary"
-                  size="md"
-                >
+                <Button onClick={handleCancel} variant="secondary" size="md">
                   Cancel
                 </Button>
-                <Button
-                  onClick={handleSave}
-                  variant="primary"
-                  size="md"
-                >
+                <Button onClick={handleSave} variant="primary" size="md">
                   <Check className="w-4 h-4" />
                   Save Changes
                 </Button>

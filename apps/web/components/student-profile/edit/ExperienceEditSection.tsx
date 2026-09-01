@@ -88,11 +88,7 @@ export default function ExperienceEditSection({
             Showcase your internships, full-time roles, or part-time work with key achievements.
           </p>
         </div>
-        <Button
-          onClick={handleAddExperience}
-          size="sm"
-          className="shrink-0"
-        >
+        <Button onClick={handleAddExperience} size="sm" className="shrink-0">
           <Plus className="w-3.5 h-3.5" />
           Add Experience
         </Button>
@@ -102,11 +98,7 @@ export default function ExperienceEditSection({
         {experiences.length === 0 ? (
           <div className="text-center py-8 bg-bg-page rounded-2xl border border-dashed border-border-muted">
             <p className="text-sm text-text-muted mb-3">No work experience added yet.</p>
-            <Button
-              onClick={handleAddExperience}
-              variant="secondary"
-              size="xs"
-            >
+            <Button onClick={handleAddExperience} variant="secondary" size="xs">
               <Plus className="w-3.5 h-3.5" />
               Add First Experience
             </Button>

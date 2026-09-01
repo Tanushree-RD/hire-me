@@ -137,11 +137,7 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
               placeholder="Add tech tag (e.g. REACT, PYTHON)..."
               className="flex-1 px-3.5 py-2 text-xs text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand uppercase font-mono"
             />
-            <Button
-              onClick={handleAddTag}
-              disabled={!newTag.trim()}
-              size="sm"
-            >
+            <Button onClick={handleAddTag} disabled={!newTag.trim()} size="sm">
               <Plus className="w-3.5 h-3.5" />
               Add Tag
             </Button>
@@ -182,11 +178,7 @@ export default function ProjectsEditSection({ projects, onChange }: ProjectsEdit
             Highlight your top software projects, architectures, and technical accomplishments.
           </p>
         </div>
-        <Button
-          onClick={handleAddProject}
-          size="sm"
-          className="shrink-0"
-        >
+        <Button onClick={handleAddProject} size="sm" className="shrink-0">
           <Plus className="w-3.5 h-3.5" />
           Add Project
         </Button>
@@ -196,11 +188,7 @@ export default function ProjectsEditSection({ projects, onChange }: ProjectsEdit
         {projects.length === 0 ? (
           <div className="text-center py-8 bg-bg-page rounded-2xl border border-dashed border-border-muted">
             <p className="text-sm text-text-muted mb-3">No projects added yet.</p>
-            <Button
-              onClick={handleAddProject}
-              variant="secondary"
-              size="xs"
-            >
+            <Button onClick={handleAddProject} variant="secondary" size="xs">
               <Plus className="w-3.5 h-3.5" />
               Add First Project
             </Button>

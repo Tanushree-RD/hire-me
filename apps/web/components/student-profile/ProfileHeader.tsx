@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, type ChangeEvent, type ReactNode } from 'react'
+import { useState, useRef, useEffect, type ChangeEvent, type ReactNode } from 'react'
 import Link from 'next/link'
 import { Camera, MapPin, Mail, Download, Pencil } from 'lucide-react'
 import { Icon, Card, Badge } from '@/components/ui/primitives'
@@ -19,21 +19,45 @@ function ContactDetail({ icon, children }: { icon: ReactNode; children: ReactNod
   )
 }
 
+function normalizeGithubUrl(url: string): string {
+  const trimmed = url.trim()
+  if (!trimmed) return ''
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed
+  }
+  return `https://${trimmed}`
+}
+
 export default function ProfileHeader({ profile }: { profile: ProfileData }) {
   const [photoUrl, setPhotoUrl] = useState<string>(profile.photoUrl)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const blobUrlRef = useRef<string | null>(null)
 
   const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current)
+      }
       const previewUrl = URL.createObjectURL(file)
+      blobUrlRef.current = previewUrl
       setPhotoUrl(previewUrl)
     }
   }
 
+  useEffect(() => {
+    return () => {
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current)
+      }
+    }
+  }, [])
+
   const handleButtonClick = () => {
     fileInputRef.current?.click()
   }
+
+  const normalizedGithubUrl = normalizeGithubUrl(profile.github)
 
   return (
     <Card as="section" className="p-6 sm:p-7">
@@ -94,7 +118,7 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
               icon={<Icon d={githubD} className="w-3.5 h-3.5 shrink-0" fill="currentColor" />}
             >
               <a
-                href={`https://${profile.github}`}
+                href={normalizedGithubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-text-main transition-colors duration-150"

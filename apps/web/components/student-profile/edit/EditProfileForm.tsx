@@ -83,7 +83,7 @@ export default function EditProfileForm() {
                 <Button onClick={handleCancel} variant="secondary" size="md">
                   Cancel
                 </Button>
-                <Button onClick={handleSave} variant="primary" size="md">
+                <Button type="submit" form="edit-profile-form" variant="primary" size="md">
                   <Check className="w-4 h-4" />
                   Save Changes
                 </Button>
@@ -91,7 +91,7 @@ export default function EditProfileForm() {
             </div>
           </div>
 
-          <form onSubmit={handleSave} className="space-y-6 sm:space-y-8">
+          <form id="edit-profile-form" onSubmit={handleSave} className="space-y-6 sm:space-y-8">
             <BasicInfoSection
               data={formData.profile}
               onChange={(updatedProfile) =>

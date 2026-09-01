@@ -33,7 +33,7 @@ export default function Sidebar() {
 
       {mobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 transition-opacity"
+          className="lg:hidden fixed inset-0 bg-action-dark/40 backdrop-blur-xs z-40 transition-opacity"
           onClick={() => setMobileOpen(false)}
           aria-hidden="true"
         />

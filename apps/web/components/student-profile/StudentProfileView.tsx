@@ -19,9 +19,7 @@ export default function StudentProfileView() {
   const hasExperiences = experiences.length > 0
   const hasProjects = projects.length > 0
   const hasSkills = skills.length > 0
-
-  // The right sidebar renders when at least one of its sections has content.
-  const hasRightColumn = hasSkills || true
+  const hasRightColumn = hasSkills || Boolean(academics)
 
   return (
     <div className="min-h-screen bg-bg-page flex">

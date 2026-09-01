@@ -26,7 +26,6 @@ export type {
   AcademicData,
   FullProfileState,
   NavItem,
-  UpcomingEvent,
   UserAvatarProps,
   ProfileContextValue,
   BasicInfoSectionProps,

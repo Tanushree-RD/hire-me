@@ -11,6 +11,7 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({
     push: mockPush,
   }),
+  usePathname: () => '/student/profile',
 }))
 
 describe('UserAvatar', () => {

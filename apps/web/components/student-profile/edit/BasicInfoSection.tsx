@@ -32,7 +32,7 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
             value={data.name}
             onChange={(e) => handleFieldChange('name', e.target.value)}
             placeholder="e.g. Alex Mercer"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -50,7 +50,7 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
             value={data.degree}
             onChange={(e) => handleFieldChange('degree', e.target.value)}
             placeholder="e.g. B.S. Computer Science, Stanford University '25"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -67,7 +67,7 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
             value={data.university || ''}
             onChange={(e) => handleFieldChange('university', e.target.value)}
             placeholder="e.g. Stanford University"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -84,7 +84,7 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
             value={data.graduationYear || ''}
             onChange={(e) => handleFieldChange('graduationYear', e.target.value)}
             placeholder="e.g. 2025"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -101,7 +101,7 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
             value={data.location}
             onChange={(e) => handleFieldChange('location', e.target.value)}
             placeholder="e.g. San Francisco, CA"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -118,7 +118,7 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
             value={data.github}
             onChange={(e) => handleFieldChange('github', e.target.value)}
             placeholder="e.g. github.com/alexm"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -135,7 +135,7 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
             value={data.email}
             onChange={(e) => handleFieldChange('email', e.target.value)}
             placeholder="e.g. alex@example.edu"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -152,7 +152,7 @@ export default function BasicInfoSection({ data, onChange }: BasicInfoSectionPro
             value={data.resumeLink || ''}
             onChange={(e) => handleFieldChange('resumeLink', e.target.value)}
             placeholder="e.g. https://drive.google.com/file/d/.../view"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
       </div>

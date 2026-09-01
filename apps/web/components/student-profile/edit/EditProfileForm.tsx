@@ -7,6 +7,7 @@ import { ArrowLeft, HelpCircle, Check } from 'lucide-react'
 import { useProfile } from '@/components/student-profile/ProfileContext'
 import Sidebar from '@/components/student-profile/Sidebar'
 import Footer from '@/components/student-profile/Footer'
+import { Button } from '@/components/ui/primitives'
 import BasicInfoSection from './BasicInfoSection'
 import SkillsEditSection from './SkillsEditSection'
 import ExperienceEditSection from './ExperienceEditSection'
@@ -79,21 +80,21 @@ export default function EditProfileForm() {
               </div>
 
               <div className="flex items-center gap-3">
-                <button
-                  type="button"
+                <Button
                   onClick={handleCancel}
-                  className="px-5 py-2 text-sm font-semibold text-text-main bg-card border border-border-subtle rounded-xl hover:bg-bg-page hover:border-border-muted active:scale-95 active:bg-border-subtle transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                  variant="secondary"
+                  size="md"
                 >
                   Cancel
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
                   onClick={handleSave}
-                  className="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-white bg-brand rounded-xl hover:bg-brand-hover active:scale-95 active:bg-brand-dark transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                  variant="primary"
+                  size="md"
                 >
                   <Check className="w-4 h-4" />
                   Save Changes
-                </button>
+                </Button>
               </div>
             </div>
           </div>

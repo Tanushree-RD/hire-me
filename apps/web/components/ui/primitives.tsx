@@ -108,12 +108,58 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide',
+        'inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wide',
         styles[variant],
         className,
       )}
     >
       {children}
     </span>
+  )
+}
+
+export interface ButtonProps extends ComponentProps<'button'> {
+  variant?: 'primary' | 'secondary' | 'destructive' | 'outline'
+  size?: 'sm' | 'md' | 'xs'
+}
+
+export function Button({
+  children,
+  variant = 'primary',
+  size = 'md',
+  className,
+  type = 'button',
+  ...props
+}: ButtonProps) {
+  const variantStyles = {
+    primary:
+      'bg-brand text-white hover:bg-brand-hover active:bg-brand-dark focus-visible:outline-brand',
+    secondary:
+      'bg-card text-text-main border border-border-subtle hover:bg-bg-page hover:border-border-muted active:bg-border-subtle focus-visible:outline-brand',
+    destructive:
+      'text-red-600 hover:text-red-700 bg-red-50/80 border border-red-200/80 hover:bg-red-100/80 active:bg-red-100 focus-visible:outline-red-500',
+    outline:
+      'bg-card text-text-main border border-border-subtle hover:bg-bg-page hover:border-border-muted active:bg-border-subtle focus-visible:outline-brand',
+  }
+
+  const sizeStyles = {
+    xs: 'px-3 py-1.5 text-xs',
+    sm: 'px-4 py-2 text-xs',
+    md: 'px-5 py-2 text-sm',
+  }
+
+  return (
+    <button
+      type={type}
+      className={cn(
+        'inline-flex items-center justify-center gap-1.5 font-semibold rounded-xl transition-all duration-150 shadow-xs cursor-pointer select-none active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2',
+        variantStyles[variant],
+        sizeStyles[size],
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </button>
   )
 }

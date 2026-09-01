@@ -32,7 +32,7 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
             value={academics.gpa}
             onChange={(e) => handleFieldChange('gpa', e.target.value)}
             placeholder="e.g. 3.9 / 4.0"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -50,7 +50,7 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
             value={academics.expectedGraduation}
             onChange={(e) => handleFieldChange('expectedGraduation', e.target.value)}
             placeholder="e.g. May 2025"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -68,7 +68,7 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
             value={academics.major}
             onChange={(e) => handleFieldChange('major', e.target.value)}
             placeholder="e.g. Computer Science"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -85,7 +85,7 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
             value={academics.minor}
             onChange={(e) => handleFieldChange('minor', e.target.value)}
             placeholder="e.g. Mathematics or None"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -102,7 +102,7 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
             value={academics.honors}
             onChange={(e) => handleFieldChange('honors', e.target.value)}
             placeholder="e.g. Dean's List (All Semesters), Summa Cum Laude"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
       </div>

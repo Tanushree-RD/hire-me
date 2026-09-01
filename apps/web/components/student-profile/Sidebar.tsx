@@ -2,15 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Briefcase, FileText, User, Menu, X, type LucideIcon } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { Briefcase, FileText, User, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { NavItem } from './types'
 
-interface SidebarNavItem extends NavItem {
-  icon: LucideIcon
-}
-
-const navItems: SidebarNavItem[] = [
+const NAV_ITEMS: NavItem[] = [
   { label: 'Job Feed', href: '/student/jobs', icon: Briefcase },
   { label: 'My Applications', href: '/student/applications', icon: FileText },
   { label: 'Profile', href: '/student/profile', icon: User },
@@ -18,7 +15,8 @@ const navItems: SidebarNavItem[] = [
 
 export default function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const activeNav = 'Profile'
+  const currentPath = usePathname()
+  const pathname = currentPath || '/student/profile'
 
   return (
     <>
@@ -64,8 +62,9 @@ export default function Sidebar() {
 
         <nav className="flex-1 px-2.5 py-3.5" aria-label="Sidebar navigation">
           <ul className="space-y-1" role="list">
-            {navItems.map((item) => {
-              const isActive = item.label === activeNav
+            {NAV_ITEMS.map((item) => {
+              const isActive =
+                pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
               const IconComp = item.icon
               return (
                 <li key={item.label}>
@@ -73,9 +72,9 @@ export default function Sidebar() {
                     href={item.href}
                     aria-current={isActive ? 'page' : undefined}
                     className={cn(
-                      'w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] transition-all duration-150 ease-in-out',
+                      'w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition-all duration-150 ease-in-out',
                       isActive
-                        ? 'text-brand-dark bg-brand-light font-semibold border-l-[3px] border-brand shadow-xs'
+                        ? 'text-brand-dark bg-brand-light font-semibold border-l-2 border-brand shadow-xs'
                         : 'text-text-muted hover:bg-bg-page hover:text-text-main font-medium',
                     )}
                   >

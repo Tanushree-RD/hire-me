@@ -1,7 +1,8 @@
 'use client'
 
 import { Plus, Trash2, X } from 'lucide-react'
-import { Card } from '@/components/ui/primitives'
+import { Card, Button } from '@/components/ui/primitives'
+import { formatDuration } from '../utils'
 import type { Experience, ExperienceEditSectionProps } from '../types'
 
 export default function ExperienceEditSection({
@@ -33,13 +34,10 @@ export default function ExperienceEditSection({
 
     const updated = { ...current, [field]: value } as Experience
 
-    // If start date or end date is updated, sync composite duration string
     if (field === 'startDate' || field === 'endDate') {
-      const start = (field === 'startDate' ? value : current.startDate) || ''
-      const end = (field === 'endDate' ? value : current.endDate) || ''
-      if (start || end) {
-        updated.duration = `${start} — ${end}`.trim()
-      }
+      const start = (field === 'startDate' ? value : current.startDate) as string
+      const end = (field === 'endDate' ? value : current.endDate) as string
+      updated.duration = formatDuration(start, end)
     }
 
     nextExperiences[index] = updated
@@ -90,28 +88,28 @@ export default function ExperienceEditSection({
             Showcase your internships, full-time roles, or part-time work with key achievements.
           </p>
         </div>
-        <button
-          type="button"
+        <Button
           onClick={handleAddExperience}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-xl bg-brand text-white hover:bg-brand-hover active:bg-brand-dark active:scale-[0.98] transition-all shadow-xs shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-brand"
+          size="sm"
+          className="shrink-0"
         >
           <Plus className="w-3.5 h-3.5" />
           Add Experience
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-6">
         {experiences.length === 0 ? (
           <div className="text-center py-8 bg-bg-page rounded-2xl border border-dashed border-border-muted">
             <p className="text-sm text-text-muted mb-3">No work experience added yet.</p>
-            <button
-              type="button"
+            <Button
               onClick={handleAddExperience}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-card border border-border-subtle text-text-main hover:bg-bg-page cursor-pointer"
+              variant="secondary"
+              size="xs"
             >
               <Plus className="w-3.5 h-3.5" />
               Add First Experience
-            </button>
+            </Button>
           </div>
         ) : (
           experiences.map((exp, idx) => (
@@ -124,83 +122,103 @@ export default function ExperienceEditSection({
                   Experience #{idx + 1}
                 </span>
 
-                <button
-                  type="button"
+                <Button
                   onClick={() => handleDeleteExperience(idx)}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700 bg-red-50/80 border border-red-200/80 hover:bg-red-100/80 active:scale-95 px-3 py-1.5 rounded-xl transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+                  variant="destructive"
+                  size="xs"
                   aria-label={`Delete experience ${exp.title || idx + 1}`}
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   Delete
-                </button>
+                </Button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
+                  <label
+                    htmlFor={`exp-title-${idx}`}
+                    className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+                  >
                     Position / Role <span className="text-red-500">*</span>
                   </label>
                   <input
+                    id={`exp-title-${idx}`}
                     type="text"
                     required
                     value={exp.title}
                     onChange={(e) => handleUpdateExperience(idx, 'title', e.target.value)}
                     placeholder="e.g. Software Engineering Intern"
-                    className="w-full px-3 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                    className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
+                  <label
+                    htmlFor={`exp-company-${idx}`}
+                    className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+                  >
                     Company <span className="text-red-500">*</span>
                   </label>
                   <input
+                    id={`exp-company-${idx}`}
                     type="text"
                     required
                     value={exp.company}
                     onChange={(e) => handleUpdateExperience(idx, 'company', e.target.value)}
                     placeholder="e.g. Google"
-                    className="w-full px-3 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                    className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
+                  <label
+                    htmlFor={`exp-location-${idx}`}
+                    className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+                  >
                     Location
                   </label>
                   <input
+                    id={`exp-location-${idx}`}
                     type="text"
                     value={exp.location}
                     onChange={(e) => handleUpdateExperience(idx, 'location', e.target.value)}
                     placeholder="e.g. Mountain View, CA or Remote"
-                    className="w-full px-3 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                    className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
+                    <label
+                      htmlFor={`exp-start-${idx}`}
+                      className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+                    >
                       Start Date
                     </label>
                     <input
+                      id={`exp-start-${idx}`}
                       type="text"
                       value={exp.startDate}
                       onChange={(e) => handleUpdateExperience(idx, 'startDate', e.target.value)}
                       placeholder="e.g. JUN 2023"
-                      className="w-full px-3 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                      className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
+                    <label
+                      htmlFor={`exp-end-${idx}`}
+                      className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+                    >
                       End Date
                     </label>
                     <input
+                      id={`exp-end-${idx}`}
                       type="text"
                       value={exp.endDate}
                       onChange={(e) => handleUpdateExperience(idx, 'endDate', e.target.value)}
                       placeholder="e.g. AUG 2023 or Present"
-                      className="w-full px-3 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                      className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
                     />
                   </div>
                 </div>

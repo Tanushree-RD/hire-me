@@ -1,27 +1,12 @@
 import { Card, SectionHeading, Pill } from '@/components/ui/primitives'
+import { defaultProjects } from './ProfileContext'
 import type { Project } from './types'
 
-const defaultProjects: Project[] = [
-  {
-    title: 'Distributed Cache System',
-    description:
-      'A robust, fault-tolerant distributed caching layer built in C++ mimicking Redis-like behavior with consistent hashing.',
-    tags: ['C++', 'NETWORKING', 'DISTRIBUTED SYSTEMS'],
-  },
-  {
-    title: 'ML Trading Bot',
-    description:
-      'Algorithmic trading bot using Python and TensorFlow to predict short-term market trends with 72% historical accuracy.',
-    tags: ['PYTHON', 'TENSORFLOW', 'FINANCE'],
-  },
-]
-
-/** A single project card. */
 function ProjectCard({ project }: { project: Project }) {
   return (
     <Card
       as="article"
-      className="p-6 sm:p-7 flex flex-col hover:-translate-y-1 hover:border-brand/40 hover:shadow-[0_12px_36px_-8px_rgba(0,0,0,0.08)] cursor-default group"
+      className="p-6 sm:p-7 flex flex-col hover:-translate-y-1 hover:border-brand/40 hover:shadow-md cursor-default group transition-all duration-200"
     >
       <h3 className="font-bold text-text-main text-lg tracking-tight mb-2 group-hover:text-brand transition-colors">
         {project.title}
@@ -45,8 +30,8 @@ export default function ProjectsGrid({ projects = defaultProjects }: { projects?
         <span id="projects-heading">Projects</span>
       </SectionHeading>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-        {projects.map((project) => (
-          <ProjectCard key={project.title} project={project} />
+        {projects.map((project, idx) => (
+          <ProjectCard key={project.id || `${project.title}-${idx}`} project={project} />
         ))}
       </div>
     </section>

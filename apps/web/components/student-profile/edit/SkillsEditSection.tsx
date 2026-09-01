@@ -1,20 +1,15 @@
 'use client'
 
 import { useState, type KeyboardEvent } from 'react'
-import { Code2, Wrench, Database, Check, Pencil, X, Plus } from 'lucide-react'
-import { Card } from '@/components/ui/primitives'
+import { Check, Pencil, X, Plus } from 'lucide-react'
+import { Card, Button } from '@/components/ui/primitives'
+import { getCategoryIcon } from '../utils'
 import type { SkillCategory, SkillsEditSectionProps } from '../types'
 
 interface SkillCategoryEditorProps {
   category: SkillCategory
   categoryIndex: number
   onUpdateCategory: (index: number, updated: SkillCategory) => void
-}
-
-function getCategoryIcon(label: string) {
-  if (label.includes('LANG')) return Code2
-  if (label.includes('DATA')) return Database
-  return Wrench
 }
 
 function SkillCategoryEditor({
@@ -180,15 +175,14 @@ function SkillCategoryEditor({
             className="w-full pl-3.5 pr-8 py-2 text-xs text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
-        <button
-          type="button"
+        <Button
           onClick={handleAddSkill}
           disabled={!newSkillText.trim()}
-          className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-brand text-white hover:bg-brand-hover active:scale-95 active:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          size="sm"
         >
           <Plus className="w-3.5 h-3.5" />
           Add
-        </button>
+        </Button>
       </div>
     </div>
   )

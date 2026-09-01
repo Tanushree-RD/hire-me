@@ -1,7 +1,4 @@
-/**
- * Shared TypeScript interfaces for the student profile feature.
- * Exported so they can be reused by components and future API layers.
- */
+import type { LucideIcon } from 'lucide-react'
 
 export interface ProfileData {
   name: string
@@ -36,9 +33,8 @@ export interface Project {
 
 export interface SkillCategory {
   label: string
-  /** Icon path data — a single `d` string or `paths` array for the `Icon` component. */
-  iconD: string
   skills: string[]
+  iconD?: string
 }
 
 export interface AcademicData {
@@ -57,15 +53,6 @@ export interface FullProfileState {
   academics: AcademicData
 }
 
-export interface UpcomingEvent {
-  date: string
-  title: string
-  description: string
-  isVirtual: boolean
-  /** Optional link for event registration or details. */
-  href?: string
-}
-
 export interface UserAvatarProps {
   name: string
   photoUrl?: string
@@ -78,8 +65,7 @@ export interface UserAvatarProps {
 export interface NavItem {
   label: string
   href: string
-  iconD?: string
-  iconPaths?: import('react').ComponentProps<'path'>[]
+  icon: LucideIcon
 }
 
 export interface BasicInfoSectionProps {

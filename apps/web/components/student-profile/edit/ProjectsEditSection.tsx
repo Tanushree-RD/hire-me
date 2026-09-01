@@ -2,7 +2,7 @@
 
 import { useState, type KeyboardEvent } from 'react'
 import { Plus, Trash2, X } from 'lucide-react'
-import { Card } from '@/components/ui/primitives'
+import { Card, Button } from '@/components/ui/primitives'
 import type { Project, ProjectsEditSectionProps } from '../types'
 
 interface ProjectCardEditorProps {
@@ -51,43 +51,51 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
           Project #{index + 1}
         </span>
 
-        <button
-          type="button"
+        <Button
           onClick={() => onDelete(index)}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700 bg-red-50/80 border border-red-200/80 hover:bg-red-100/80 active:scale-95 px-3 py-1.5 rounded-xl transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+          variant="destructive"
+          size="xs"
           aria-label={`Delete project ${project.title || index + 1}`}
         >
           <Trash2 className="w-3.5 h-3.5" />
           Delete
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
+          <label
+            htmlFor={`proj-title-${index}`}
+            className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+          >
             Project Title <span className="text-red-500">*</span>
           </label>
           <input
+            id={`proj-title-${index}`}
             type="text"
             required
             value={project.title}
             onChange={(e) => handleFieldChange('title', e.target.value)}
             placeholder="e.g. Distributed Cache System"
-            className="w-full px-3 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
+          <label
+            htmlFor={`proj-desc-${index}`}
+            className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+          >
             Description <span className="text-red-500">*</span>
           </label>
           <textarea
+            id={`proj-desc-${index}`}
             rows={3}
             required
             value={project.description}
             onChange={(e) => handleFieldChange('description', e.target.value)}
             placeholder="Describe the architecture, problem solved, impact, and engineering techniques used..."
-            className="w-full px-3 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand resize-y"
+            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand resize-y"
           />
         </div>
 
@@ -129,15 +137,14 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
               placeholder="Add tech tag (e.g. REACT, PYTHON)..."
               className="flex-1 px-3.5 py-2 text-xs text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand uppercase font-mono"
             />
-            <button
-              type="button"
+            <Button
               onClick={handleAddTag}
               disabled={!newTag.trim()}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-brand text-white hover:bg-brand-hover active:scale-95 active:bg-brand-dark disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              size="sm"
             >
               <Plus className="w-3.5 h-3.5" />
               Add Tag
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -175,28 +182,28 @@ export default function ProjectsEditSection({ projects, onChange }: ProjectsEdit
             Highlight your top software projects, architectures, and technical accomplishments.
           </p>
         </div>
-        <button
-          type="button"
+        <Button
           onClick={handleAddProject}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-xl bg-brand text-white hover:bg-brand-hover active:scale-95 active:bg-brand-dark transition-all duration-150 shadow-xs shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          size="sm"
+          className="shrink-0"
         >
           <Plus className="w-3.5 h-3.5" />
           Add Project
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-6">
         {projects.length === 0 ? (
           <div className="text-center py-8 bg-bg-page rounded-2xl border border-dashed border-border-muted">
             <p className="text-sm text-text-muted mb-3">No projects added yet.</p>
-            <button
-              type="button"
+            <Button
               onClick={handleAddProject}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-card border border-border-subtle text-text-main hover:bg-bg-page hover:border-border-muted active:scale-95 active:bg-border-subtle transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              variant="secondary"
+              size="xs"
             >
               <Plus className="w-3.5 h-3.5" />
               Add First Project
-            </button>
+            </Button>
           </div>
         ) : (
           projects.map((project, idx) => (

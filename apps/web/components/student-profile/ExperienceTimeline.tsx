@@ -1,32 +1,8 @@
 import { MapPin } from 'lucide-react'
 import { Card, SectionHeading, Pill } from '@/components/ui/primitives'
 import { cn } from '@/lib/utils'
+import { defaultExperiences } from './ProfileContext'
 import type { Experience } from './types'
-
-const defaultExperiences: Experience[] = [
-  {
-    title: 'Software Engineering Intern',
-    company: 'Google',
-    location: 'Mountain View, CA',
-    duration: 'JUN 2023 — AUG 2023',
-    achievements: [
-      'Developed a highly scalable microservice using Go and gRPC, improving data processing speed by 25%.',
-      'Collaborated with cross-functional teams to design and implement new API endpoints.',
-      'Optimized database queries in PostgreSQL, reducing latency for search results by 40%.',
-    ],
-  },
-  {
-    title: 'Backend Developer (Part-time)',
-    company: 'StartupX',
-    location: 'Remote',
-    duration: 'JAN 2023 — MAY 2023',
-    achievements: [
-      'Maintained and optimized PostgreSQL databases for user analytics.',
-      'Built RESTful APIs in Node.js/Express for the core mobile application.',
-      'Implemented automated testing with Jest, achieving 90% code coverage.',
-    ],
-  },
-]
 
 function TimelineEntry({ experience, isLast }: { experience: Experience; isLast: boolean }) {
   return (
@@ -86,7 +62,7 @@ export default function ExperienceTimeline({
         <div className="space-y-0">
           {experiences.map((exp, idx) => (
             <TimelineEntry
-              key={`${exp.company}-${exp.title}`}
+              key={exp.id || `${exp.company}-${exp.title}-${idx}`}
               experience={exp}
               isLast={idx === experiences.length - 1}
             />

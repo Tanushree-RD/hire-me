@@ -1,7 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
-import { codeD, wrenchD, databaseD } from '@/components/ui/icons'
+import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react'
 import type {
   ProfileData,
   Experience,
@@ -76,17 +75,14 @@ export const defaultProjects: Project[] = [
 export const defaultSkillCategories: SkillCategory[] = [
   {
     label: 'LANGUAGES',
-    iconD: codeD,
     skills: ['Python', 'Java', 'C++', 'JavaScript', 'Go'],
   },
   {
     label: 'FRAMEWORKS & TOOLS',
-    iconD: wrenchD,
     skills: ['React', 'Node.js', 'Docker', 'Git', 'AWS'],
   },
   {
     label: 'DATABASE',
-    iconD: databaseD,
     skills: ['PostgreSQL', 'Redis', 'MongoDB'],
   },
 ]
@@ -124,20 +120,23 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     setAcademics(defaultAcademics)
   }, [])
 
-  const value: ProfileContextValue = {
-    profile,
-    experiences,
-    projects,
-    skills,
-    academics,
-    setProfile,
-    setExperiences,
-    setProjects,
-    setSkills,
-    setAcademics,
-    saveAll,
-    resetToDefault,
-  }
+  const value = useMemo<ProfileContextValue>(
+    () => ({
+      profile,
+      experiences,
+      projects,
+      skills,
+      academics,
+      setProfile,
+      setExperiences,
+      setProjects,
+      setSkills,
+      setAcademics,
+      saveAll,
+      resetToDefault,
+    }),
+    [profile, experiences, projects, skills, academics, saveAll, resetToDefault],
+  )
 
   return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>
 }

@@ -1,14 +1,16 @@
 'use client'
 
-import { useState, useRef, type ChangeEvent } from 'react'
+import { useState, useRef, type ChangeEvent, type ReactNode } from 'react'
 import Link from 'next/link'
 import { Camera, MapPin, Mail, Download, Pencil } from 'lucide-react'
-import { Icon, Card } from '@/components/ui/primitives'
+import { Icon, Card, Badge } from '@/components/ui/primitives'
 import { githubD, verifiedCheckPaths } from '@/components/ui/icons'
 import UserAvatar from './UserAvatar'
 import type { ProfileData } from './types'
 
-function ContactDetail({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+const AVATAR_SIZE = '88'
+
+function ContactDetail({ icon, children }: { icon: ReactNode; children: ReactNode }) {
   return (
     <span className="inline-flex items-center gap-1.5">
       {icon}
@@ -33,8 +35,6 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
     fileInputRef.current?.click()
   }
 
-  const currentPhoto = photoUrl || profile.photoUrl
-
   return (
     <Card as="section" className="p-6 sm:p-7">
       <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-6">
@@ -49,8 +49,8 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
           />
           <UserAvatar
             name={profile.name}
-            photoUrl={currentPhoto}
-            size="88"
+            photoUrl={photoUrl}
+            size={AVATAR_SIZE}
             round={true}
             className="w-[88px] h-[88px] ring-4 ring-card shadow-sm"
           />
@@ -70,7 +70,7 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
               {profile.name}
             </h1>
             {profile.isVerified && (
-              <span className="inline-flex items-center gap-1.5 bg-brand-light text-brand-dark text-[11px] font-bold px-3 py-0.5 rounded-full uppercase tracking-wider border border-brand-mint/60">
+              <Badge variant="emerald" className="gap-1.5 px-3">
                 <Icon
                   paths={verifiedCheckPaths}
                   className="w-3.5 h-3.5"
@@ -79,13 +79,13 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
                   label="Verified"
                 />
                 Verified Student
-              </span>
+              </Badge>
             )}
           </div>
 
           <p className="text-sm font-medium text-text-muted mb-2.5">{profile.degree}</p>
 
-          <address className="not-italic flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[13px] text-text-muted mb-4">
+          <address className="not-italic flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-text-muted mb-4">
             <ContactDetail icon={<MapPin className="w-3.5 h-3.5 shrink-0" />}>
               {profile.location}
             </ContactDetail>
@@ -119,7 +119,7 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
                 href={profile.resumeLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-brand text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-hover active:bg-brand-dark active:scale-[0.98] transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                className="inline-flex items-center gap-2 bg-brand text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-hover active:bg-brand-dark active:scale-95 transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
               >
                 <Download className="w-4 h-4" strokeWidth={2} />
                 Download Resume
@@ -135,7 +135,7 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
             )}
             <Link
               href="/student/profile/edit"
-              className="inline-flex items-center gap-2 bg-card text-text-main px-5 py-2.5 rounded-xl text-sm font-semibold border border-border-subtle hover:bg-bg-page hover:border-border-muted active:bg-border-subtle active:scale-[0.98] transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              className="inline-flex items-center gap-2 bg-card text-text-main px-5 py-2.5 rounded-xl text-sm font-semibold border border-border-subtle hover:bg-bg-page hover:border-border-muted active:bg-border-subtle active:scale-95 transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             >
               <Pencil className="w-4 h-4" strokeWidth={2} />
               Edit Profile

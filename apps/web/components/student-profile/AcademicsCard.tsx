@@ -1,16 +1,8 @@
 import { Calendar } from 'lucide-react'
 import { Card } from '@/components/ui/primitives'
+import { defaultAcademics } from './ProfileContext'
 import type { AcademicData } from './types'
 
-const defaultAcademics: AcademicData = {
-  gpa: '3.9 / 4.0',
-  major: 'Computer Science',
-  minor: 'Mathematics',
-  honors: "Dean's List (All Semesters)",
-  expectedGraduation: 'May 2025',
-}
-
-/** A single key-value row in the academics table. */
 function AcademicRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start justify-between py-2.5 first:pt-0">
@@ -42,7 +34,6 @@ export default function AcademicsCard({
         ))}
       </dl>
 
-      {/* Expected Graduation Badge Container */}
       <div className="mt-4 bg-brand-light/80 rounded-2xl p-4 text-center border border-brand-mint/50 transition-all hover:bg-brand-light">
         <div className="flex items-center justify-center gap-2 mb-1">
           <Calendar className="w-4 h-4 text-brand-dark" />

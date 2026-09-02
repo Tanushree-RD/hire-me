@@ -12,3 +12,25 @@ export const verifiedCheckPaths: PathProps[] = [
     clipRule: 'evenodd' as const,
   },
 ]
+
+export function GithubIcon({ className = 'w-3.5 h-3.5 shrink-0' }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d={githubD} />
+    </svg>
+  )
+}
+
+export function VerifiedCheckIcon({
+  className = 'w-3.5 h-3.5 text-brand',
+}: {
+  className?: string
+}) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+      {verifiedCheckPaths.map((p, i) => (
+        <path key={i} {...p} />
+      ))}
+    </svg>
+  )
+}

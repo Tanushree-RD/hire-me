@@ -1,7 +1,7 @@
 'use client'
 
-import { Card } from '@/components/ui/primitives'
-import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import type { AcademicData, AcademicsEditSectionProps } from '../types'
 
 export default function AcademicsEditSection({
@@ -30,7 +30,7 @@ export default function AcademicsEditSection({
           >
             GPA <span className="text-red-500">*</span>
           </label>
-          <input
+          <Input
             id="edit-gpa"
             type="text"
             required
@@ -38,12 +38,6 @@ export default function AcademicsEditSection({
             onChange={(e) => handleFieldChange('gpa', e.target.value)}
             placeholder="e.g. 3.9 / 4.0"
             aria-invalid={Boolean(errors?.gpa)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-              errors?.gpa
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.gpa && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -59,7 +53,7 @@ export default function AcademicsEditSection({
           >
             Graduation Date / Expected Graduation <span className="text-red-500">*</span>
           </label>
-          <input
+          <Input
             id="edit-expected-grad"
             type="text"
             required
@@ -67,12 +61,6 @@ export default function AcademicsEditSection({
             onChange={(e) => handleFieldChange('expectedGraduation', e.target.value)}
             placeholder="e.g. May 2025"
             aria-invalid={Boolean(errors?.expectedGraduation)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-              errors?.expectedGraduation
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.expectedGraduation && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -88,7 +76,7 @@ export default function AcademicsEditSection({
           >
             Major <span className="text-red-500">*</span>
           </label>
-          <input
+          <Input
             id="edit-major"
             type="text"
             required
@@ -96,12 +84,6 @@ export default function AcademicsEditSection({
             onChange={(e) => handleFieldChange('major', e.target.value)}
             placeholder="e.g. Computer Science"
             aria-invalid={Boolean(errors?.major)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-              errors?.major
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.major && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -117,13 +99,12 @@ export default function AcademicsEditSection({
           >
             Minor
           </label>
-          <input
+          <Input
             id="edit-minor"
             type="text"
             value={academics.minor}
             onChange={(e) => handleFieldChange('minor', e.target.value)}
             placeholder="e.g. Mathematics or None"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -134,13 +115,12 @@ export default function AcademicsEditSection({
           >
             Academic Honors / Awards
           </label>
-          <input
+          <Input
             id="edit-honors"
             type="text"
             value={academics.honors}
             onChange={(e) => handleFieldChange('honors', e.target.value)}
             placeholder="e.g. Dean's List (All Semesters), Summa Cum Laude"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
       </div>

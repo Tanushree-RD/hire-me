@@ -1,5 +1,6 @@
 import { MapPin } from 'lucide-react'
-import { Card, SectionHeading, Pill } from '@/components/ui/primitives'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { defaultExperiences } from './ProfileContext'
 import type { Experience } from './types'
@@ -20,9 +21,9 @@ function TimelineEntry({ experience, isLast }: { experience: Experience; isLast:
           <h3 className="font-bold text-text-main text-sm sm:text-base tracking-tight">
             {experience.title}
           </h3>
-          <Pill>
+          <Badge variant="secondary">
             <time className="font-mono">{experience.duration}</time>
-          </Pill>
+          </Badge>
         </div>
 
         <p className="text-xs sm:text-sm font-medium text-text-muted mb-2.5">
@@ -55,9 +56,9 @@ export default function ExperienceTimeline({
 }) {
   return (
     <section aria-labelledby="experience-heading">
-      <SectionHeading>
+      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-text-main mb-3.5">
         <span id="experience-heading">Experience</span>
-      </SectionHeading>
+      </h2>
       <Card className="p-6 sm:p-7">
         <div className="space-y-0">
           {experiences.map((exp, idx) => (

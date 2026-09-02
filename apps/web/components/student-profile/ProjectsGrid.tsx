@@ -1,4 +1,5 @@
-import { Card, SectionHeading, Pill } from '@/components/ui/primitives'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { defaultProjects } from './ProfileContext'
 import type { Project } from './types'
 
@@ -15,7 +16,7 @@ function ProjectCard({ project }: { project: Project }) {
       <ul className="flex flex-wrap gap-2" aria-label={`Technologies used in ${project.title}`}>
         {project.tags.map((tag) => (
           <li key={tag}>
-            <Pill variant="outline">{tag}</Pill>
+            <Badge variant="outline">{tag}</Badge>
           </li>
         ))}
       </ul>
@@ -26,9 +27,9 @@ function ProjectCard({ project }: { project: Project }) {
 export default function ProjectsGrid({ projects = defaultProjects }: { projects?: Project[] }) {
   return (
     <section aria-labelledby="projects-heading">
-      <SectionHeading>
+      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-text-main mb-3.5">
         <span id="projects-heading">Projects</span>
-      </SectionHeading>
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
         {projects.map((project, idx) => (
           <ProjectCard key={project.id || `${project.title}-${idx}`} project={project} />

@@ -1,5 +1,5 @@
 import { Calendar } from 'lucide-react'
-import { Card } from '@/components/ui/primitives'
+import { Card } from '@/components/ui/card'
 import { defaultAcademics } from './ProfileContext'
 import type { AcademicData } from './types'
 

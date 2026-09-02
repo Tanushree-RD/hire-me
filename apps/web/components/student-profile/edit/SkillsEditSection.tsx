@@ -2,7 +2,9 @@
 
 import { useState, type KeyboardEvent } from 'react'
 import { Check, Pencil, X, Plus } from 'lucide-react'
-import { Card, Button } from '@/components/ui/primitives'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { getCategoryIcon } from '../utils'
 import type { SkillCategory, SkillsEditSectionProps } from '../types'
 
@@ -166,13 +168,13 @@ function SkillCategoryEditor({
 
       <div className="flex items-center gap-2 pt-1">
         <div className="relative flex-1">
-          <input
+          <Input
             type="text"
             value={newSkillText}
             onChange={(e) => setNewSkillText(e.target.value)}
             onKeyDown={handleAddKeyDown}
             placeholder={`Add a skill to ${category.label.toLowerCase()} (e.g. Next.js)...`}
-            className="w-full pl-3.5 pr-8 py-2 text-xs text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
+            className="text-xs"
           />
         </div>
         <Button onClick={handleAddSkill} disabled={!newSkillText.trim()} size="sm">

@@ -2,8 +2,10 @@
 
 import { useState, type KeyboardEvent } from 'react'
 import { Plus, Trash2, X } from 'lucide-react'
-import { Card, Button } from '@/components/ui/primitives'
-import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import type { Project, ProjectsEditSectionProps } from '../types'
 
 interface ProjectCardEditorProps {
@@ -72,7 +74,7 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
           >
             Project Title <span className="text-red-500">*</span>
           </label>
-          <input
+          <Input
             id={`proj-title-${index}`}
             type="text"
             required
@@ -80,12 +82,6 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
             onChange={(e) => handleFieldChange('title', e.target.value)}
             placeholder="e.g. Distributed Cache System"
             aria-invalid={Boolean(errors?.title)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-              errors?.title
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.title && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -101,7 +97,7 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
           >
             Description <span className="text-red-500">*</span>
           </label>
-          <textarea
+          <Textarea
             id={`proj-desc-${index}`}
             rows={3}
             required
@@ -109,12 +105,6 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
             onChange={(e) => handleFieldChange('description', e.target.value)}
             placeholder="Describe the architecture, problem solved, impact, and engineering techniques used..."
             aria-invalid={Boolean(errors?.description)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors resize-y',
-              errors?.description
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.description && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -131,13 +121,12 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
             >
               Start Date
             </label>
-            <input
+            <Input
               id={`proj-start-${index}`}
               type="text"
               value={project.startDate || ''}
               onChange={(e) => handleFieldChange('startDate', e.target.value)}
               placeholder="e.g. SEP 2023"
-              className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
             />
           </div>
 
@@ -148,19 +137,13 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
             >
               End Date
             </label>
-            <input
+            <Input
               id={`proj-end-${index}`}
               type="text"
               value={project.endDate || ''}
               onChange={(e) => handleFieldChange('endDate', e.target.value)}
               placeholder="e.g. DEC 2023 or Present"
               aria-invalid={Boolean(errors?.endDate)}
-              className={cn(
-                'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-                errors?.endDate
-                  ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                  : 'border-border-subtle focus:ring-brand focus:border-brand',
-              )}
             />
           </div>
         </div>
@@ -200,13 +183,13 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
           </div>
 
           <div className="flex items-center gap-2">
-            <input
+            <Input
               type="text"
               value={newTag}
               onChange={(e) => setNewTag(e.target.value)}
               onKeyDown={handleTagKeyDown}
               placeholder="Add tech tag (e.g. REACT, PYTHON)..."
-              className="flex-1 px-3.5 py-2 text-xs text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand uppercase font-mono"
+              className="flex-1 uppercase font-mono text-xs"
             />
             <Button onClick={handleAddTag} disabled={!newTag.trim()} size="sm">
               <Plus className="w-3.5 h-3.5" />

@@ -1,4 +1,5 @@
-import { Card, Pill } from '@/components/ui/primitives'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { defaultSkillCategories } from './ProfileContext'
 import { getCategoryIcon } from './utils'
 import type { SkillCategory } from './types'
@@ -17,7 +18,7 @@ function SkillGroup({ category }: { category: SkillCategory }) {
       <ul className="flex flex-wrap gap-2" aria-label={category.label}>
         {category.skills.map((skill) => (
           <li key={skill}>
-            <Pill variant="outline">{skill}</Pill>
+            <Badge variant="outline">{skill}</Badge>
           </li>
         ))}
       </ul>

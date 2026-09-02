@@ -3,8 +3,9 @@
 import { useState, useRef, useEffect, type ChangeEvent, type ReactNode } from 'react'
 import Link from 'next/link'
 import { Camera, MapPin, Mail, Download, Pencil } from 'lucide-react'
-import { Icon, Card, Badge } from '@/components/ui/primitives'
-import { githubD, verifiedCheckPaths } from '@/components/ui/icons'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { GithubIcon, VerifiedCheckIcon } from '@/components/ui/icons'
 import UserAvatar from './UserAvatar'
 import type { ProfileData } from './types'
 
@@ -95,13 +96,7 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
             </h1>
             {profile.isVerified && (
               <Badge variant="emerald" className="gap-1.5 px-3">
-                <Icon
-                  paths={verifiedCheckPaths}
-                  className="w-3.5 h-3.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  label="Verified"
-                />
+                <VerifiedCheckIcon className="w-3.5 h-3.5" />
                 Verified Student
               </Badge>
             )}
@@ -114,9 +109,7 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
               {profile.location}
             </ContactDetail>
 
-            <ContactDetail
-              icon={<Icon d={githubD} className="w-3.5 h-3.5 shrink-0" fill="currentColor" />}
-            >
+            <ContactDetail icon={<GithubIcon className="w-3.5 h-3.5 shrink-0" />}>
               <a
                 href={normalizedGithubUrl}
                 target="_blank"

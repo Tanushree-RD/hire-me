@@ -1,8 +1,9 @@
 'use client'
 
 import { Plus, Trash2, X } from 'lucide-react'
-import { Card, Button } from '@/components/ui/primitives'
-import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { formatDuration } from '../utils'
 import type { Experience, ExperienceEditSectionProps } from '../types'
 
@@ -138,7 +139,7 @@ export default function ExperienceEditSection({
                     >
                       Position / Role <span className="text-red-500">*</span>
                     </label>
-                    <input
+                    <Input
                       id={`exp-title-${idx}`}
                       type="text"
                       required
@@ -146,12 +147,6 @@ export default function ExperienceEditSection({
                       onChange={(e) => handleUpdateExperience(idx, 'title', e.target.value)}
                       placeholder="e.g. Software Engineering Intern"
                       aria-invalid={Boolean(itemErrors?.title)}
-                      className={cn(
-                        'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-                        itemErrors?.title
-                          ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                          : 'border-border-subtle focus:ring-brand focus:border-brand',
-                      )}
                     />
                     {itemErrors?.title && (
                       <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -167,7 +162,7 @@ export default function ExperienceEditSection({
                     >
                       Company <span className="text-red-500">*</span>
                     </label>
-                    <input
+                    <Input
                       id={`exp-company-${idx}`}
                       type="text"
                       required
@@ -175,12 +170,6 @@ export default function ExperienceEditSection({
                       onChange={(e) => handleUpdateExperience(idx, 'company', e.target.value)}
                       placeholder="e.g. Google"
                       aria-invalid={Boolean(itemErrors?.company)}
-                      className={cn(
-                        'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-                        itemErrors?.company
-                          ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                          : 'border-border-subtle focus:ring-brand focus:border-brand',
-                      )}
                     />
                     {itemErrors?.company && (
                       <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -196,13 +185,12 @@ export default function ExperienceEditSection({
                     >
                       Location
                     </label>
-                    <input
+                    <Input
                       id={`exp-location-${idx}`}
                       type="text"
                       value={exp.location}
                       onChange={(e) => handleUpdateExperience(idx, 'location', e.target.value)}
                       placeholder="e.g. Mountain View, CA or Remote"
-                      className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
                     />
                   </div>
 
@@ -215,13 +203,12 @@ export default function ExperienceEditSection({
                         >
                           Start Date
                         </label>
-                        <input
+                        <Input
                           id={`exp-start-${idx}`}
                           type="text"
                           value={exp.startDate}
                           onChange={(e) => handleUpdateExperience(idx, 'startDate', e.target.value)}
                           placeholder="e.g. JUN 2023"
-                          className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
                         />
                       </div>
 
@@ -232,19 +219,13 @@ export default function ExperienceEditSection({
                         >
                           End Date
                         </label>
-                        <input
+                        <Input
                           id={`exp-end-${idx}`}
                           type="text"
                           value={exp.endDate}
                           onChange={(e) => handleUpdateExperience(idx, 'endDate', e.target.value)}
                           placeholder="e.g. AUG 2023 or Present"
                           aria-invalid={Boolean(itemErrors?.endDate)}
-                          className={cn(
-                            'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-                            itemErrors?.endDate
-                              ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                              : 'border-border-subtle focus:ring-brand focus:border-brand',
-                          )}
                         />
                       </div>
                     </div>
@@ -263,12 +244,12 @@ export default function ExperienceEditSection({
                     {exp.achievements.map((achievement, aIdx) => (
                       <div key={aIdx} className="flex items-center gap-2">
                         <span className="text-text-muted/60 text-sm font-bold select-none">•</span>
-                        <input
+                        <Input
                           type="text"
                           value={achievement}
                           onChange={(e) => handleUpdateAchievement(idx, aIdx, e.target.value)}
                           placeholder="e.g. Developed scalable microservices in Go, improving latency by 25%..."
-                          className="flex-1 px-3 py-1.5 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                          className="flex-1 py-1.5"
                         />
                         <button
                           type="button"

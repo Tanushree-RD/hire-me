@@ -1,7 +1,7 @@
 'use client'
 
-import { Card } from '@/components/ui/primitives'
-import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import type { BasicInfoSectionProps, ProfileData } from '../types'
 
 export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSectionProps) {
@@ -26,7 +26,7 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
           >
             Full Name <span className="text-red-500">*</span>
           </label>
-          <input
+          <Input
             id="edit-name"
             type="text"
             required
@@ -34,12 +34,6 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
             onChange={(e) => handleFieldChange('name', e.target.value)}
             placeholder="e.g. Alex Mercer"
             aria-invalid={Boolean(errors?.name)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-              errors?.name
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.name && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -55,7 +49,7 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
           >
             Headline / Degree Description <span className="text-red-500">*</span>
           </label>
-          <input
+          <Input
             id="edit-degree"
             type="text"
             required
@@ -63,12 +57,6 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
             onChange={(e) => handleFieldChange('degree', e.target.value)}
             placeholder="e.g. B.S. Computer Science, Stanford University '25"
             aria-invalid={Boolean(errors?.degree)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-              errors?.degree
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.degree && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -84,13 +72,12 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
           >
             University
           </label>
-          <input
+          <Input
             id="edit-university"
             type="text"
             value={data.university || ''}
             onChange={(e) => handleFieldChange('university', e.target.value)}
             placeholder="e.g. Stanford University"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -101,13 +88,12 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
           >
             Graduation Year
           </label>
-          <input
+          <Input
             id="edit-grad-year"
             type="text"
             value={data.graduationYear || ''}
             onChange={(e) => handleFieldChange('graduationYear', e.target.value)}
             placeholder="e.g. 2025"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -118,13 +104,12 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
           >
             Location
           </label>
-          <input
+          <Input
             id="edit-location"
             type="text"
             value={data.location}
             onChange={(e) => handleFieldChange('location', e.target.value)}
             placeholder="e.g. San Francisco, CA"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
           />
         </div>
 
@@ -135,19 +120,13 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
           >
             GitHub URL / Handle
           </label>
-          <input
+          <Input
             id="edit-github"
             type="text"
             value={data.github}
             onChange={(e) => handleFieldChange('github', e.target.value)}
             placeholder="e.g. github.com/alexm"
             aria-invalid={Boolean(errors?.github)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-              errors?.github
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.github && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -163,19 +142,13 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
           >
             Email Address
           </label>
-          <input
+          <Input
             id="edit-email"
             type="email"
             value={data.email}
             onChange={(e) => handleFieldChange('email', e.target.value)}
             placeholder="e.g. alex@example.edu"
             aria-invalid={Boolean(errors?.email)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-              errors?.email
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.email && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
@@ -191,19 +164,13 @@ export default function BasicInfoSection({ data, onChange, errors }: BasicInfoSe
           >
             Resume Link
           </label>
-          <input
+          <Input
             id="edit-resume-link"
             type="url"
             value={data.resumeLink || ''}
             onChange={(e) => handleFieldChange('resumeLink', e.target.value)}
             placeholder="e.g. https://drive.google.com/file/d/.../view"
             aria-invalid={Boolean(errors?.resumeLink)}
-            className={cn(
-              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
-              errors?.resumeLink
-                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-border-subtle focus:ring-brand focus:border-brand',
-            )}
           />
           {errors?.resumeLink && (
             <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">

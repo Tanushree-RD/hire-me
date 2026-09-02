@@ -17,6 +17,21 @@ export {
   defaultSkillCategories,
   defaultAcademics,
 } from './ProfileContext'
+export {
+  profileFormSchema,
+  profileDataSchema,
+  academicDataSchema,
+  experienceItemSchema,
+  projectItemSchema,
+  skillCategorySchema,
+  gpaSchema,
+  githubUrlSchema,
+  parseDateString,
+  isDateOrderValid,
+  parseGpa,
+} from './schema'
+export type { ProfileFormValues } from './schema'
+export { saveProfileToApi } from './api'
 
 export type {
   ProfileData,

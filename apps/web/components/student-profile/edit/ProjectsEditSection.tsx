@@ -3,6 +3,7 @@
 import { useState, type KeyboardEvent } from 'react'
 import { Plus, Trash2, X } from 'lucide-react'
 import { Card, Button } from '@/components/ui/primitives'
+import { cn } from '@/lib/utils'
 import type { Project, ProjectsEditSectionProps } from '../types'
 
 interface ProjectCardEditorProps {
@@ -10,9 +11,10 @@ interface ProjectCardEditorProps {
   index: number
   onUpdate: (index: number, updated: Project) => void
   onDelete: (index: number) => void
+  errors?: Partial<Record<keyof Project, string>>
 }
 
-function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEditorProps) {
+function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: ProjectCardEditorProps) {
   const [newTag, setNewTag] = useState('')
 
   const handleFieldChange = (field: keyof Project, value: unknown) => {
@@ -77,8 +79,19 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
             value={project.title}
             onChange={(e) => handleFieldChange('title', e.target.value)}
             placeholder="e.g. Distributed Cache System"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+            aria-invalid={Boolean(errors?.title)}
+            className={cn(
+              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
+              errors?.title
+                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                : 'border-border-subtle focus:ring-brand focus:border-brand',
+            )}
           />
+          {errors?.title && (
+            <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
+              {errors.title}
+            </p>
+          )}
         </div>
 
         <div>
@@ -95,9 +108,67 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
             value={project.description}
             onChange={(e) => handleFieldChange('description', e.target.value)}
             placeholder="Describe the architecture, problem solved, impact, and engineering techniques used..."
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand resize-y"
+            aria-invalid={Boolean(errors?.description)}
+            className={cn(
+              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors resize-y',
+              errors?.description
+                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                : 'border-border-subtle focus:ring-brand focus:border-brand',
+            )}
           />
+          {errors?.description && (
+            <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
+              {errors.description}
+            </p>
+          )}
         </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label
+              htmlFor={`proj-start-${index}`}
+              className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+            >
+              Start Date
+            </label>
+            <input
+              id={`proj-start-${index}`}
+              type="text"
+              value={project.startDate || ''}
+              onChange={(e) => handleFieldChange('startDate', e.target.value)}
+              placeholder="e.g. SEP 2023"
+              className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor={`proj-end-${index}`}
+              className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+            >
+              End Date
+            </label>
+            <input
+              id={`proj-end-${index}`}
+              type="text"
+              value={project.endDate || ''}
+              onChange={(e) => handleFieldChange('endDate', e.target.value)}
+              placeholder="e.g. DEC 2023 or Present"
+              aria-invalid={Boolean(errors?.endDate)}
+              className={cn(
+                'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
+                errors?.endDate
+                  ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                  : 'border-border-subtle focus:ring-brand focus:border-brand',
+              )}
+            />
+          </div>
+        </div>
+        {errors?.endDate && (
+          <p className="mt-1 text-xs text-red-500 font-medium" role="alert">
+            {errors.endDate}
+          </p>
+        )}
 
         <div>
           <label className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5">
@@ -148,13 +219,19 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete }: ProjectCardEd
   )
 }
 
-export default function ProjectsEditSection({ projects, onChange }: ProjectsEditSectionProps) {
+export default function ProjectsEditSection({
+  projects,
+  onChange,
+  errors,
+}: ProjectsEditSectionProps) {
   const handleAddProject = () => {
     const newProj: Project = {
       id: `proj-${Date.now()}`,
       title: '',
       description: '',
       tags: [],
+      startDate: '',
+      endDate: '',
     }
     onChange([...projects, newProj])
   }
@@ -201,6 +278,7 @@ export default function ProjectsEditSection({ projects, onChange }: ProjectsEdit
               index={idx}
               onUpdate={handleUpdateProject}
               onDelete={handleDeleteProject}
+              errors={errors?.[idx]}
             />
           ))
         )}

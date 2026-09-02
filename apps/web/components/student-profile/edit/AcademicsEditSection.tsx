@@ -1,9 +1,14 @@
 'use client'
 
 import { Card } from '@/components/ui/primitives'
+import { cn } from '@/lib/utils'
 import type { AcademicData, AcademicsEditSectionProps } from '../types'
 
-export default function AcademicsEditSection({ academics, onChange }: AcademicsEditSectionProps) {
+export default function AcademicsEditSection({
+  academics,
+  onChange,
+  errors,
+}: AcademicsEditSectionProps) {
   const handleFieldChange = (field: keyof AcademicData, value: string) => {
     onChange({ ...academics, [field]: value })
   }
@@ -32,8 +37,19 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
             value={academics.gpa}
             onChange={(e) => handleFieldChange('gpa', e.target.value)}
             placeholder="e.g. 3.9 / 4.0"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
+            aria-invalid={Boolean(errors?.gpa)}
+            className={cn(
+              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
+              errors?.gpa
+                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                : 'border-border-subtle focus:ring-brand focus:border-brand',
+            )}
           />
+          {errors?.gpa && (
+            <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
+              {errors.gpa}
+            </p>
+          )}
         </div>
 
         <div>
@@ -50,8 +66,19 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
             value={academics.expectedGraduation}
             onChange={(e) => handleFieldChange('expectedGraduation', e.target.value)}
             placeholder="e.g. May 2025"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
+            aria-invalid={Boolean(errors?.expectedGraduation)}
+            className={cn(
+              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
+              errors?.expectedGraduation
+                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                : 'border-border-subtle focus:ring-brand focus:border-brand',
+            )}
           />
+          {errors?.expectedGraduation && (
+            <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
+              {errors.expectedGraduation}
+            </p>
+          )}
         </div>
 
         <div>
@@ -68,8 +95,19 @@ export default function AcademicsEditSection({ academics, onChange }: AcademicsE
             value={academics.major}
             onChange={(e) => handleFieldChange('major', e.target.value)}
             placeholder="e.g. Computer Science"
-            className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
+            aria-invalid={Boolean(errors?.major)}
+            className={cn(
+              'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
+              errors?.major
+                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                : 'border-border-subtle focus:ring-brand focus:border-brand',
+            )}
           />
+          {errors?.major && (
+            <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
+              {errors.major}
+            </p>
+          )}
         </div>
 
         <div>

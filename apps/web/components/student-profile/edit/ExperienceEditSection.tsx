@@ -2,12 +2,14 @@
 
 import { Plus, Trash2, X } from 'lucide-react'
 import { Card, Button } from '@/components/ui/primitives'
+import { cn } from '@/lib/utils'
 import { formatDuration } from '../utils'
 import type { Experience, ExperienceEditSectionProps } from '../types'
 
 export default function ExperienceEditSection({
   experiences,
   onChange,
+  errors,
 }: ExperienceEditSectionProps) {
   const handleAddExperience = () => {
     const newExp: Experience = {
@@ -104,156 +106,195 @@ export default function ExperienceEditSection({
             </Button>
           </div>
         ) : (
-          experiences.map((exp, idx) => (
-            <div
-              key={exp.id || idx}
-              className="p-5 sm:p-6 rounded-2xl bg-bg-page border border-border-subtle transition-all duration-200 hover:border-border-muted hover:shadow-xs"
-            >
-              <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-border-subtle">
-                <span className="text-xs font-bold text-brand-dark bg-brand-light px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-brand-mint/50">
-                  Experience #{idx + 1}
-                </span>
+          experiences.map((exp, idx) => {
+            const itemErrors = errors?.[idx]
 
-                <Button
-                  onClick={() => handleDeleteExperience(idx)}
-                  variant="destructive"
-                  size="xs"
-                  aria-label={`Delete experience ${exp.title || idx + 1}`}
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Delete
-                </Button>
-              </div>
+            return (
+              <div
+                key={exp.id || idx}
+                className="p-5 sm:p-6 rounded-2xl bg-bg-page border border-border-subtle transition-all duration-200 hover:border-border-muted hover:shadow-xs"
+              >
+                <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-border-subtle">
+                  <span className="text-xs font-bold text-brand-dark bg-brand-light px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-brand-mint/50">
+                    Experience #{idx + 1}
+                  </span>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor={`exp-title-${idx}`}
-                    className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+                  <Button
+                    onClick={() => handleDeleteExperience(idx)}
+                    variant="destructive"
+                    size="xs"
+                    aria-label={`Delete experience ${exp.title || idx + 1}`}
                   >
-                    Position / Role <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id={`exp-title-${idx}`}
-                    type="text"
-                    required
-                    value={exp.title}
-                    onChange={(e) => handleUpdateExperience(idx, 'title', e.target.value)}
-                    placeholder="e.g. Software Engineering Intern"
-                    className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
-                  />
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Delete
+                  </Button>
                 </div>
 
-                <div>
-                  <label
-                    htmlFor={`exp-company-${idx}`}
-                    className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
-                  >
-                    Company <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id={`exp-company-${idx}`}
-                    type="text"
-                    required
-                    value={exp.company}
-                    onChange={(e) => handleUpdateExperience(idx, 'company', e.target.value)}
-                    placeholder="e.g. Google"
-                    className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor={`exp-location-${idx}`}
-                    className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
-                  >
-                    Location
-                  </label>
-                  <input
-                    id={`exp-location-${idx}`}
-                    type="text"
-                    value={exp.location}
-                    onChange={(e) => handleUpdateExperience(idx, 'location', e.target.value)}
-                    placeholder="e.g. Mountain View, CA or Remote"
-                    className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label
-                      htmlFor={`exp-start-${idx}`}
+                      htmlFor={`exp-title-${idx}`}
                       className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
                     >
-                      Start Date
+                      Position / Role <span className="text-red-500">*</span>
                     </label>
                     <input
-                      id={`exp-start-${idx}`}
+                      id={`exp-title-${idx}`}
                       type="text"
-                      value={exp.startDate}
-                      onChange={(e) => handleUpdateExperience(idx, 'startDate', e.target.value)}
-                      placeholder="e.g. JUN 2023"
-                      className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                      required
+                      value={exp.title}
+                      onChange={(e) => handleUpdateExperience(idx, 'title', e.target.value)}
+                      placeholder="e.g. Software Engineering Intern"
+                      aria-invalid={Boolean(itemErrors?.title)}
+                      className={cn(
+                        'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
+                        itemErrors?.title
+                          ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                          : 'border-border-subtle focus:ring-brand focus:border-brand',
+                      )}
                     />
+                    {itemErrors?.title && (
+                      <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
+                        {itemErrors.title}
+                      </p>
+                    )}
                   </div>
 
                   <div>
                     <label
-                      htmlFor={`exp-end-${idx}`}
+                      htmlFor={`exp-company-${idx}`}
                       className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
                     >
-                      End Date
+                      Company <span className="text-red-500">*</span>
                     </label>
                     <input
-                      id={`exp-end-${idx}`}
+                      id={`exp-company-${idx}`}
                       type="text"
-                      value={exp.endDate}
-                      onChange={(e) => handleUpdateExperience(idx, 'endDate', e.target.value)}
-                      placeholder="e.g. AUG 2023 or Present"
-                      className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                      required
+                      value={exp.company}
+                      onChange={(e) => handleUpdateExperience(idx, 'company', e.target.value)}
+                      placeholder="e.g. Google"
+                      aria-invalid={Boolean(itemErrors?.company)}
+                      className={cn(
+                        'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
+                        itemErrors?.company
+                          ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                          : 'border-border-subtle focus:ring-brand focus:border-brand',
+                      )}
+                    />
+                    {itemErrors?.company && (
+                      <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
+                        {itemErrors.company}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor={`exp-location-${idx}`}
+                      className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+                    >
+                      Location
+                    </label>
+                    <input
+                      id={`exp-location-${idx}`}
+                      type="text"
+                      value={exp.location}
+                      onChange={(e) => handleUpdateExperience(idx, 'location', e.target.value)}
+                      placeholder="e.g. Mountain View, CA or Remote"
+                      className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
                     />
                   </div>
-                </div>
 
-                <div className="sm:col-span-2 space-y-2 mt-1">
-                  <label className="block text-xs font-bold text-text-muted uppercase tracking-wider">
-                    Description & Achievements (Bullet Points)
-                  </label>
+                  <div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label
+                          htmlFor={`exp-start-${idx}`}
+                          className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+                        >
+                          Start Date
+                        </label>
+                        <input
+                          id={`exp-start-${idx}`}
+                          type="text"
+                          value={exp.startDate}
+                          onChange={(e) => handleUpdateExperience(idx, 'startDate', e.target.value)}
+                          placeholder="e.g. JUN 2023"
+                          className="w-full px-3.5 py-2 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand transition-colors"
+                        />
+                      </div>
 
-                  {exp.achievements.map((achievement, aIdx) => (
-                    <div key={aIdx} className="flex items-center gap-2">
-                      <span className="text-text-muted/60 text-sm font-bold select-none">•</span>
-                      <input
-                        type="text"
-                        value={achievement}
-                        onChange={(e) => handleUpdateAchievement(idx, aIdx, e.target.value)}
-                        placeholder="e.g. Developed scalable microservices in Go, improving latency by 25%..."
-                        className="flex-1 px-3 py-1.5 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteAchievement(idx, aIdx)}
-                        className="text-text-muted hover:text-red-500 hover:bg-red-50 p-1.5 rounded-lg active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-red-500"
-                        title="Remove bullet point"
-                        aria-label={`Remove achievement bullet ${aIdx + 1}`}
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+                      <div>
+                        <label
+                          htmlFor={`exp-end-${idx}`}
+                          className="block text-xs font-bold text-text-muted uppercase tracking-wider mb-1.5"
+                        >
+                          End Date
+                        </label>
+                        <input
+                          id={`exp-end-${idx}`}
+                          type="text"
+                          value={exp.endDate}
+                          onChange={(e) => handleUpdateExperience(idx, 'endDate', e.target.value)}
+                          placeholder="e.g. AUG 2023 or Present"
+                          aria-invalid={Boolean(itemErrors?.endDate)}
+                          className={cn(
+                            'w-full px-3.5 py-2 text-sm text-text-main bg-card border rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 transition-colors',
+                            itemErrors?.endDate
+                              ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                              : 'border-border-subtle focus:ring-brand focus:border-brand',
+                          )}
+                        />
+                      </div>
                     </div>
-                  ))}
+                    {itemErrors?.endDate && (
+                      <p className="mt-1.5 text-xs text-red-500 font-medium" role="alert">
+                        {itemErrors.endDate}
+                      </p>
+                    )}
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleAddAchievement(idx)}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-brand-dark hover:text-brand active:scale-95 pt-1 transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-brand"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    Add Bullet Point
-                  </button>
+                  <div className="sm:col-span-2 space-y-2 mt-1">
+                    <label className="block text-xs font-bold text-text-muted uppercase tracking-wider">
+                      Description & Achievements (Bullet Points)
+                    </label>
+
+                    {exp.achievements.map((achievement, aIdx) => (
+                      <div key={aIdx} className="flex items-center gap-2">
+                        <span className="text-text-muted/60 text-sm font-bold select-none">•</span>
+                        <input
+                          type="text"
+                          value={achievement}
+                          onChange={(e) => handleUpdateAchievement(idx, aIdx, e.target.value)}
+                          placeholder="e.g. Developed scalable microservices in Go, improving latency by 25%..."
+                          className="flex-1 px-3 py-1.5 text-sm text-text-main bg-card border border-border-subtle rounded-xl shadow-xs placeholder:text-text-muted/60 focus:outline-none focus:ring-1 focus:ring-brand focus:border-brand"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteAchievement(idx, aIdx)}
+                          className="text-text-muted hover:text-red-500 hover:bg-red-50 p-1.5 rounded-lg active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-red-500"
+                          title="Remove bullet point"
+                          aria-label={`Remove achievement bullet ${aIdx + 1}`}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+
+                    <button
+                      type="button"
+                      onClick={() => handleAddAchievement(idx)}
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-brand-dark hover:text-brand active:scale-95 pt-1 transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-brand"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      Add Bullet Point
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            )
+          })
         )}
       </div>
     </Card>

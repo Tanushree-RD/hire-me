@@ -29,6 +29,8 @@ export interface Project {
   title: string
   description: string
   tags: string[]
+  startDate?: string
+  endDate?: string
 }
 
 export interface SkillCategory {
@@ -71,21 +73,25 @@ export interface NavItem {
 export interface BasicInfoSectionProps {
   data: ProfileData
   onChange: (profile: ProfileData) => void
+  errors?: Partial<Record<keyof ProfileData, string>>
 }
 
 export interface AcademicsEditSectionProps {
   academics: AcademicData
   onChange: (academics: AcademicData) => void
+  errors?: Partial<Record<keyof AcademicData, string>>
 }
 
 export interface ExperienceEditSectionProps {
   experiences: Experience[]
   onChange: (experiences: Experience[]) => void
+  errors?: Record<number, Partial<Record<keyof Experience, string>>>
 }
 
 export interface ProjectsEditSectionProps {
   projects: Project[]
   onChange: (projects: Project[]) => void
+  errors?: Record<number, Partial<Record<keyof Project, string>>>
 }
 
 export interface SkillsEditSectionProps {

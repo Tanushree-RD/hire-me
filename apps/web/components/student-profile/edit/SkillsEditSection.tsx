@@ -150,27 +150,29 @@ function SkillCategoryEditor({
                   key={skillField.id}
                   className="inline-flex items-center gap-1 bg-card border-2 border-brand rounded-lg px-1.5 py-0.5 shadow-xs"
                 >
-                  <input
+                  <Input
                     type="text"
                     value={editingValue}
                     onChange={(e) => setEditingValue(e.target.value)}
                     onKeyDown={(e) => handleEditKeyDown(e, sIdx)}
                     onBlur={() => handleSaveEdit(sIdx)}
                     autoFocus
-                    className="text-xs font-mono text-text-main bg-transparent outline-none w-24 px-1"
+                    className="h-auto border-0 bg-transparent p-0 px-1 text-xs font-mono shadow-none focus-visible:ring-0 rounded-none w-24"
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     onMouseDown={(e) => {
                       e.preventDefault()
                       handleSaveEdit(sIdx)
                     }}
-                    className="text-brand-dark hover:text-brand p-1 rounded-lg hover:bg-brand-light active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-brand"
+                    className="h-6 w-6 p-1 text-brand-dark hover:text-brand hover:bg-brand-light rounded-lg"
                     title="Save skill"
                     aria-label={`Save ${skill}`}
                   >
                     <Check className="w-3.5 h-3.5" />
-                  </button>
+                  </Button>
                 </div>
               )
             }
@@ -182,25 +184,29 @@ function SkillCategoryEditor({
               >
                 <span>{skill}</span>
 
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => handleStartEdit(sIdx, skill)}
-                  className="opacity-60 hover:opacity-100 text-text-muted hover:text-brand-dark hover:bg-bg-page active:scale-95 transition-all duration-150 cursor-pointer p-0.5 rounded"
+                  className="h-5 w-5 p-0.5 opacity-60 hover:opacity-100 text-text-muted hover:text-brand-dark hover:bg-bg-page rounded"
                   title="Edit skill"
                   aria-label={`Edit ${skill}`}
                 >
                   <Pencil className="w-3 h-3" />
-                </button>
+                </Button>
 
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => handleRemoveSkill(sIdx)}
-                  className="opacity-60 hover:opacity-100 text-text-muted hover:text-red-500 hover:bg-red-50 active:scale-95 transition-all duration-150 cursor-pointer p-0.5 rounded"
+                  className="h-5 w-5 p-0.5 opacity-60 hover:opacity-100 text-text-muted hover:text-red-500 hover:bg-red-50 rounded"
                   title="Remove skill"
                   aria-label={`Remove ${skill}`}
                 >
                   <X className="w-3 h-3" />
-                </button>
+                </Button>
               </div>
             )
           })
@@ -214,27 +220,29 @@ function SkillCategoryEditor({
                   key={sIdx}
                   className="inline-flex items-center gap-1 bg-card border-2 border-brand rounded-lg px-1.5 py-0.5 shadow-xs"
                 >
-                  <input
+                  <Input
                     type="text"
                     value={editingValue}
                     onChange={(e) => setEditingValue(e.target.value)}
                     onKeyDown={(e) => handleEditKeyDown(e, sIdx)}
                     onBlur={() => handleSaveEdit(sIdx)}
                     autoFocus
-                    className="text-xs font-mono text-text-main bg-transparent outline-none w-24 px-1"
+                    className="h-auto border-0 bg-transparent p-0 px-1 text-xs font-mono shadow-none focus-visible:ring-0 rounded-none w-24"
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     onMouseDown={(e) => {
                       e.preventDefault()
                       handleSaveEdit(sIdx)
                     }}
-                    className="text-brand-dark hover:text-brand p-1 rounded-lg hover:bg-brand-light active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-brand"
+                    className="h-6 w-6 p-1 text-brand-dark hover:text-brand hover:bg-brand-light rounded-lg"
                     title="Save skill"
                     aria-label={`Save ${skill}`}
                   >
                     <Check className="w-3.5 h-3.5" />
-                  </button>
+                  </Button>
                 </div>
               )
             }
@@ -246,25 +254,29 @@ function SkillCategoryEditor({
               >
                 <span>{skill}</span>
 
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => handleStartEdit(sIdx, skill)}
-                  className="opacity-60 hover:opacity-100 text-text-muted hover:text-brand-dark hover:bg-bg-page active:scale-95 transition-all duration-150 cursor-pointer p-0.5 rounded"
+                  className="h-5 w-5 p-0.5 opacity-60 hover:opacity-100 text-text-muted hover:text-brand-dark hover:bg-bg-page rounded"
                   title="Edit skill"
                   aria-label={`Edit ${skill}`}
                 >
                   <Pencil className="w-3 h-3" />
-                </button>
+                </Button>
 
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => handleRemoveSkill(sIdx)}
-                  className="opacity-60 hover:opacity-100 text-text-muted hover:text-red-500 hover:bg-red-50 active:scale-95 transition-all duration-150 cursor-pointer p-0.5 rounded"
+                  className="h-5 w-5 p-0.5 opacity-60 hover:opacity-100 text-text-muted hover:text-red-500 hover:bg-red-50 rounded"
                   title="Remove skill"
                   aria-label={`Remove ${skill}`}
                 >
                   <X className="w-3 h-3" />
-                </button>
+                </Button>
               </div>
             )
           })

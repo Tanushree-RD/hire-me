@@ -179,15 +179,17 @@ function ProjectCardEditor({ index, onDelete, errors }: ProjectCardEditorProps) 
                     className="inline-flex items-center gap-1.5 bg-card text-text-main text-xs font-mono px-2.5 py-1 rounded-lg border border-border-subtle shadow-xs"
                   >
                     {tag}
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleRemoveTag(tIdx)}
-                      className="text-text-muted hover:text-red-500 hover:bg-red-50 p-0.5 rounded active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-red-500"
+                      className="h-4 w-4 p-0.5 text-text-muted hover:text-red-500 hover:bg-red-50 rounded"
                       title="Remove tag"
                       aria-label={`Remove tag ${tag}`}
                     >
                       <X className="w-3 h-3" />
-                    </button>
+                    </Button>
                   </span>
                 )
               })

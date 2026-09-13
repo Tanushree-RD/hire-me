@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Briefcase, FileText, User, Menu, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { NavItem } from './types'
 
@@ -20,14 +21,16 @@ export default function Sidebar() {
 
   return (
     <>
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="icon"
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-3 left-3 z-50 p-2 bg-card rounded-xl shadow-md border border-border-subtle cursor-pointer text-text-main hover:bg-bg-page transition-colors"
+        className="lg:hidden fixed top-3 left-3 z-50 rounded-xl shadow-md"
         aria-label="Open navigation menu"
       >
         <Menu className="w-5 h-5 text-text-main" />
-      </button>
+      </Button>
 
       {mobileOpen && (
         <div
@@ -50,14 +53,16 @@ export default function Sidebar() {
             <span className="text-sm font-extrabold tracking-tight text-text-main">CareerLink</span>
           </Link>
 
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={() => setMobileOpen(false)}
-            className="lg:hidden p-1 rounded-lg text-text-muted hover:text-text-main hover:bg-bg-page transition-colors duration-150 cursor-pointer"
+            className="lg:hidden h-7 w-7 rounded-lg text-text-muted hover:text-text-main hover:bg-bg-page p-1"
             aria-label="Close navigation menu"
           >
             <X className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
         <nav className="flex-1 px-2.5 py-3.5" aria-label="Sidebar navigation">

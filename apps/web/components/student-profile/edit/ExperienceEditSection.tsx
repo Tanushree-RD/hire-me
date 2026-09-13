@@ -186,26 +186,30 @@ function ExperienceItemEditor({ index, itemErrors, onDelete }: ExperienceItemEdi
                 placeholder="e.g. Developed scalable microservices in Go, improving latency by 25%..."
                 className="flex-1 py-1.5"
               />
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => removeAchievement(aIdx)}
-                className="text-text-muted hover:text-red-500 hover:bg-red-50 p-1.5 rounded-lg active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-red-500"
+                className="h-8 w-8 p-1.5 text-text-muted hover:text-red-500 hover:bg-red-50 rounded-lg"
                 title="Remove bullet point"
                 aria-label={`Remove achievement bullet ${aIdx + 1}`}
               >
                 <X className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           ))}
 
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="xs"
             onClick={() => appendAchievement('')}
-            className="inline-flex items-center gap-1 text-xs font-semibold text-brand-dark hover:text-brand active:scale-95 pt-1 transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-brand"
+            className="gap-1 p-0 h-auto font-semibold text-brand-dark hover:text-brand hover:bg-transparent"
           >
             <Plus className="w-3.5 h-3.5" />
             Add Bullet Point
-          </button>
+          </Button>
         </div>
       </div>
     </div>

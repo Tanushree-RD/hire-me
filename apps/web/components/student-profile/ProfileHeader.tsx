@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { Camera, MapPin, Mail, Download, Pencil } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { GithubIcon, VerifiedCheckIcon } from '@/components/ui/icons'
 import UserAvatar from './UserAvatar'
 import type { ProfileData } from './types'
@@ -64,7 +66,7 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
     <Card as="section" className="p-6 sm:p-7">
       <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-6">
         <figure className="relative shrink-0 w-[88px] h-[88px]">
-          <input
+          <Input
             ref={fileInputRef}
             type="file"
             accept="image/*"
@@ -79,14 +81,15 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
             round={true}
             className="w-[88px] h-[88px] ring-4 ring-card shadow-sm"
           />
-          <button
+          <Button
             type="button"
+            size="icon"
             onClick={handleButtonClick}
-            className="absolute bottom-0 right-0 w-7 h-7 bg-brand rounded-full flex items-center justify-center shadow-md hover:bg-brand-hover hover:scale-110 active:scale-95 transition-all duration-150 ease-in-out cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            className="absolute bottom-0 right-0 w-7 h-7 rounded-full shadow-md hover:scale-110 p-0"
             aria-label="Change profile photo"
           >
             <Camera className="w-3.5 h-3.5 text-white" strokeWidth={2} />
-          </button>
+          </Button>
         </figure>
 
         <div className="flex-1 min-w-0 pt-0.5">
@@ -132,31 +135,31 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
 
           <div className="flex flex-wrap gap-3" role="group" aria-label="Profile actions">
             {profile.resumeLink ? (
-              <a
-                href={profile.resumeLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-brand text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-hover active:bg-brand-dark active:scale-95 transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-              >
-                <Download className="w-4 h-4" strokeWidth={2} />
-                Download Resume
-              </a>
+              <Button asChild className="gap-2 px-5 py-2.5">
+                <a href={profile.resumeLink} target="_blank" rel="noopener noreferrer">
+                  <Download className="w-4 h-4" strokeWidth={2} />
+                  Download Resume
+                </a>
+              </Button>
             ) : (
-              <span
-                aria-disabled="true"
-                className="inline-flex items-center gap-2 bg-border-subtle text-text-muted px-5 py-2.5 rounded-xl text-sm font-semibold cursor-not-allowed opacity-60 shadow-xs"
+              <Button
+                asChild
+                disabled
+                variant="secondary"
+                className="gap-2 px-5 py-2.5 bg-border-subtle text-text-muted cursor-not-allowed opacity-60 shadow-xs border-transparent hover:bg-border-subtle hover:border-transparent active:scale-100"
               >
-                <Download className="w-4 h-4" strokeWidth={2} />
-                Download Resume
-              </span>
+                <span aria-disabled="true">
+                  <Download className="w-4 h-4" strokeWidth={2} />
+                  Download Resume
+                </span>
+              </Button>
             )}
-            <Link
-              href="/student/profile/edit"
-              className="inline-flex items-center gap-2 bg-card text-text-main px-5 py-2.5 rounded-xl text-sm font-semibold border border-border-subtle hover:bg-bg-page hover:border-border-muted active:bg-border-subtle active:scale-95 transition-all duration-150 shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-            >
-              <Pencil className="w-4 h-4" strokeWidth={2} />
-              Edit Profile
-            </Link>
+            <Button asChild variant="outline" className="gap-2 px-5 py-2.5">
+              <Link href="/student/profile/edit">
+                <Pencil className="w-4 h-4" strokeWidth={2} />
+                Edit Profile
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

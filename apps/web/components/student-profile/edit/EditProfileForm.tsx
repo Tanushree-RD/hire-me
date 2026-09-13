@@ -126,10 +126,7 @@ export default function EditProfileForm() {
       </header>
 
       <main className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-4xl mx-auto animate-fade-in">
-        <form
-          id="edit-profile-form"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form id="edit-profile-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6 sm:mb-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
@@ -143,11 +140,7 @@ export default function EditProfileForm() {
                 <Button onClick={handleCancel} variant="secondary" size="md">
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="md"
-                >
+                <Button type="submit" variant="primary" size="md">
                   <Check className="w-4 h-4" />
                   Save Changes
                 </Button>

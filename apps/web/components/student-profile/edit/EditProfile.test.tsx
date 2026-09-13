@@ -15,10 +15,11 @@ vi.mock('next/navigation', () => ({
 }))
 
 describe('UserAvatar', () => {
-  it('renders avatar container when no photoUrl is provided', () => {
+  it('renders avatar container and initials fallback when no photoUrl is provided', () => {
     const { container } = render(<UserAvatar name="Alex Mercer" />)
     const avatar = container.querySelector('.sb-avatar')
     expect(avatar).toBeInTheDocument()
+    expect(screen.getByText('AM')).toBeInTheDocument()
   })
 
   it('renders avatar with photoUrl or name', () => {
@@ -183,7 +184,7 @@ describe('EditProfileForm', () => {
 })
 
 describe('StudentProfileView integration', () => {
-  it('renders student profile view with default data and react-avatar', () => {
+  it('renders student profile view with default data and radix-avatar', () => {
     const { container } = render(
       <ProfileProvider>
         <StudentProfileView />

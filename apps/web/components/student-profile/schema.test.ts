@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { z } from 'zod'
 import {
   githubUrlSchema,
   gpaSchema,
@@ -21,14 +22,18 @@ describe('parseDateString & isDateOrderValid', () => {
     const d2 = parseDateString('AUG 2023')
     expect(d1).not.toBeNull()
     expect(d2).not.toBeNull()
-    expect(d1!.getTime()).toBeLessThan(d2!.getTime())
+    if (d1 && d2) {
+      expect(d1.getTime()).toBeLessThan(d2.getTime())
+    }
   })
 
   it('handles Present as a far-future date', () => {
     const past = parseDateString('JAN 2023')
     const present = parseDateString('Present')
     expect(present).not.toBeNull()
-    expect(past!.getTime()).toBeLessThan(present!.getTime())
+    if (past && present) {
+      expect(past.getTime()).toBeLessThan(present.getTime())
+    }
   })
 
   it('validates date ordering correctly', () => {
@@ -105,18 +110,20 @@ describe('profileFormSchema full validation', () => {
     const result = profileFormSchema.safeParse(invalid)
     expect(result.success).toBe(false)
     if (!result.success) {
-      const paths = result.error.issues.map((i) => i.path.join('.'))
+      const paths = result.error.issues.map((i: z.ZodIssue) => i.path.join('.'))
       expect(paths).toContain('profile.name')
       expect(paths).toContain('profile.degree')
     }
   })
 
   it('rejects when experience dates are inverted', () => {
+    const firstExp = validFormData.experiences[0]
+    expect(firstExp).toBeDefined()
     const invalid = {
       ...validFormData,
       experiences: [
         {
-          ...validFormData.experiences[0]!,
+          ...(firstExp ?? defaultExperiences[0]),
           startDate: 'AUG 2023',
           endDate: 'JUN 2023',
         },
@@ -125,18 +132,22 @@ describe('profileFormSchema full validation', () => {
     const result = profileFormSchema.safeParse(invalid)
     expect(result.success).toBe(false)
     if (!result.success) {
-      const issue = result.error.issues.find((i) => i.path.join('.') === 'experiences.0.endDate')
+      const issue = result.error.issues.find(
+        (i: z.ZodIssue) => i.path.join('.') === 'experiences.0.endDate',
+      )
       expect(issue).toBeDefined()
       expect(issue?.message).toMatch(/after start date/i)
     }
   })
 
   it('rejects when project dates are inverted', () => {
+    const firstProj = validFormData.projects[0]
+    expect(firstProj).toBeDefined()
     const invalid = {
       ...validFormData,
       projects: [
         {
-          ...validFormData.projects[0]!,
+          ...(firstProj ?? defaultProjects[0]),
           startDate: '2024',
           endDate: '2023',
         },
@@ -145,7 +156,9 @@ describe('profileFormSchema full validation', () => {
     const result = profileFormSchema.safeParse(invalid)
     expect(result.success).toBe(false)
     if (!result.success) {
-      const issue = result.error.issues.find((i) => i.path.join('.') === 'projects.0.endDate')
+      const issue = result.error.issues.find(
+        (i: z.ZodIssue) => i.path.join('.') === 'projects.0.endDate',
+      )
       expect(issue).toBeDefined()
       expect(issue?.message).toMatch(/after start date/i)
     }

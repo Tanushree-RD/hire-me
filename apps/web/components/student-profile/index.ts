@@ -30,7 +30,16 @@ export {
   isDateOrderValid,
   parseGpa,
 } from './schema'
-export type { ProfileFormValues } from './schema'
+export type {
+  ProfileFormValues,
+  ProfileDataValues,
+  ExperienceItemValues,
+  ProjectItemValues,
+  SkillCategoryValues,
+  AcademicDataValues,
+  ExperienceItem,
+  ProjectItem,
+} from './schema'
 export { saveProfileToApi } from './api'
 
 export type {

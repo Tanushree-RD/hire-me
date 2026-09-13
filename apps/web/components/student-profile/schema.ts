@@ -14,23 +14,23 @@ export function parseDateString(dateStr?: string): Date | null {
 
   // Handle format like "JUN 2023" or "June 2023" or "Jan, 2023"
   const monthYearMatch = trimmed.match(/^([a-zA-Z]+)[,\s/-]+(\d{4})$/)
-  if (monthYearMatch) {
+  if (monthYearMatch && monthYearMatch[1] && monthYearMatch[2]) {
     const d = new Date(`${monthYearMatch[1]} 1, ${monthYearMatch[2]}`)
     if (!isNaN(d.getTime())) return d
   }
 
   // Handle numeric format like "06/2023" or "6-2023"
   const numMonthYear = trimmed.match(/^(\d{1,2})[\s/-]+(\d{4})$/)
-  if (numMonthYear) {
-    const month = parseInt(numMonthYear[1]!, 10) - 1
-    const year = parseInt(numMonthYear[2]!, 10)
+  if (numMonthYear && numMonthYear[1] && numMonthYear[2]) {
+    const month = parseInt(numMonthYear[1], 10) - 1
+    const year = parseInt(numMonthYear[2], 10)
     return new Date(year, month, 1)
   }
 
   // Handle Year only like "2023"
   const yearOnly = trimmed.match(/^(\d{4})$/)
-  if (yearOnly) {
-    return new Date(parseInt(yearOnly[1]!, 10), 0, 1)
+  if (yearOnly && yearOnly[1]) {
+    return new Date(parseInt(yearOnly[1], 10), 0, 1)
   }
 
   const direct = Date.parse(trimmed)
@@ -60,16 +60,16 @@ export function parseGpa(val: string): { score: number; scale?: number } | null 
   if (!trimmed) return null
 
   const scaleMatch = trimmed.match(/^(\d+(\.\d+)?)\s*\/\s*(\d+(\.\d+)?)$/)
-  if (scaleMatch) {
-    const score = parseFloat(scaleMatch[1]!)
-    const scale = parseFloat(scaleMatch[3]!)
+  if (scaleMatch && scaleMatch[1] && scaleMatch[3]) {
+    const score = parseFloat(scaleMatch[1])
+    const scale = parseFloat(scaleMatch[3])
     if (isNaN(score) || isNaN(scale) || scale <= 0) return null
     return { score, scale }
   }
 
   const singleMatch = trimmed.match(/^(\d+(\.\d+)?)$/)
-  if (singleMatch) {
-    const score = parseFloat(singleMatch[1]!)
+  if (singleMatch && singleMatch[1]) {
+    const score = parseFloat(singleMatch[1])
     if (isNaN(score)) return null
     return { score }
   }
@@ -81,7 +81,7 @@ export function parseGpa(val: string): { score: number; scale?: number } | null 
  * GitHub URL schema: allows empty string or valid GitHub URL / handle with github.com
  */
 export const githubUrlSchema = z.string().refine(
-  (val) => {
+  (val: string) => {
     if (!val || val.trim() === '') return true
     return /^(https?:\/\/)?(www\.)?github\.com\/[a-zA-Z0-9_.-]+(\/.*)?$/i.test(val.trim())
   },
@@ -97,7 +97,7 @@ export const gpaSchema = z
   .string()
   .min(1, 'GPA is required')
   .refine(
-    (val) => {
+    (val: string) => {
       const parsed = parseGpa(val)
       if (!parsed) return false
       if (parsed.scale !== undefined) {
@@ -111,40 +111,56 @@ export const gpaSchema = z
   )
 
 /**
+ * Raw object schema for experience items.
+ */
+export const experienceItemObjectSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1, 'Position / role is required'),
+  company: z.string().min(1, 'Company is required'),
+  location: z.string(),
+  duration: z.string(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  achievements: z.array(z.string()),
+})
+
+export type ExperienceItem = z.infer<typeof experienceItemObjectSchema>
+
+/**
  * Experience item schema with date ordering validation.
  */
-export const experienceItemSchema = z
-  .object({
-    id: z.string().optional(),
-    title: z.string().min(1, 'Position / role is required'),
-    company: z.string().min(1, 'Company is required'),
-    location: z.string(),
-    duration: z.string(),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
-    achievements: z.array(z.string()),
-  })
-  .refine((data) => isDateOrderValid(data.startDate, data.endDate), {
+export const experienceItemSchema = experienceItemObjectSchema.refine(
+  (data: ExperienceItem) => isDateOrderValid(data.startDate, data.endDate),
+  {
     message: 'End date must be after start date',
     path: ['endDate'],
-  })
+  },
+)
+
+/**
+ * Raw object schema for project items.
+ */
+export const projectItemObjectSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1, 'Project title is required'),
+  description: z.string().min(1, 'Project description is required'),
+  tags: z.array(z.string()),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+})
+
+export type ProjectItem = z.infer<typeof projectItemObjectSchema>
 
 /**
  * Project item schema with date ordering validation.
  */
-export const projectItemSchema = z
-  .object({
-    id: z.string().optional(),
-    title: z.string().min(1, 'Project title is required'),
-    description: z.string().min(1, 'Project description is required'),
-    tags: z.array(z.string()),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
-  })
-  .refine((data) => isDateOrderValid(data.startDate, data.endDate), {
+export const projectItemSchema = projectItemObjectSchema.refine(
+  (data: ProjectItem) => isDateOrderValid(data.startDate, data.endDate),
+  {
     message: 'End date must be after start date',
     path: ['endDate'],
-  })
+  },
+)
 
 /**
  * Skill category schema.
@@ -165,14 +181,14 @@ export const profileDataSchema = z.object({
   graduationYear: z.string().optional(),
   location: z.string(),
   github: githubUrlSchema,
-  email: z.string().refine((val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+  email: z.string().refine((val: string) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
     message: 'Invalid email address',
   }),
   resumeLink: z
     .string()
     .optional()
     .refine(
-      (val) => {
+      (val: string | undefined) => {
         if (!val || val.trim() === '') return true
         try {
           new URL(val)
@@ -209,4 +225,9 @@ export const profileFormSchema = z.object({
   academics: academicDataSchema,
 })
 
+export type ProfileDataValues = z.infer<typeof profileDataSchema>
+export type ExperienceItemValues = z.infer<typeof experienceItemSchema>
+export type ProjectItemValues = z.infer<typeof projectItemSchema>
+export type SkillCategoryValues = z.infer<typeof skillCategorySchema>
+export type AcademicDataValues = z.infer<typeof academicDataSchema>
 export type ProfileFormValues = z.infer<typeof profileFormSchema>

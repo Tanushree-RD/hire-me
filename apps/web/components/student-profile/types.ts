@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
+import type { Control } from 'react-hook-form'
 
 export interface ProfileData {
   name: string
@@ -83,20 +84,23 @@ export interface AcademicsEditSectionProps {
 }
 
 export interface ExperienceEditSectionProps {
-  experiences: Experience[]
-  onChange: (experiences: Experience[]) => void
+  control?: Control<FullProfileState>
+  experiences?: Experience[]
+  onChange?: (experiences: Experience[]) => void
   errors?: Record<number, Partial<Record<keyof Experience, string>>>
 }
 
 export interface ProjectsEditSectionProps {
-  projects: Project[]
-  onChange: (projects: Project[]) => void
+  control?: Control<FullProfileState>
+  projects?: Project[]
+  onChange?: (projects: Project[]) => void
   errors?: Record<number, Partial<Record<keyof Project, string>>>
 }
 
 export interface SkillsEditSectionProps {
-  categories: SkillCategory[]
-  onChange: (categories: SkillCategory[]) => void
+  control?: Control<FullProfileState>
+  categories?: SkillCategory[]
+  onChange?: (categories: SkillCategory[]) => void
 }
 
 export interface ProfileContextValue {

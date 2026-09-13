@@ -2,37 +2,51 @@
 
 import { useState, type KeyboardEvent } from 'react'
 import { Plus, Trash2, X } from 'lucide-react'
+import {
+  useFieldArray,
+  useFormContext,
+  useWatch,
+  type Control,
+  type FieldValues,
+} from 'react-hook-form'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import type { Project, ProjectsEditSectionProps } from '../types'
+import type { Project, ProjectsEditSectionProps, FullProfileState } from '../types'
 
 interface ProjectCardEditorProps {
-  project: Project
   index: number
-  onUpdate: (index: number, updated: Project) => void
   onDelete: (index: number) => void
   errors?: Partial<Record<keyof Project, string>>
 }
 
-function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: ProjectCardEditorProps) {
+function ProjectCardEditor({ index, onDelete, errors }: ProjectCardEditorProps) {
+  const { control, register } = useFormContext<FullProfileState>()
   const [newTag, setNewTag] = useState('')
 
-  const handleFieldChange = (field: keyof Project, value: unknown) => {
-    onUpdate(index, { ...project, [field]: value })
-  }
+  const title = useWatch({ control, name: `projects.${index}.title` })
+
+  const {
+    fields: tagFields,
+    append: appendTag,
+    remove: removeTag,
+  } = useFieldArray<FieldValues>({
+    control: control as unknown as Control<FieldValues>,
+    name: `projects.${index}.tags`,
+  })
+
+  const currentTags = useWatch({ control, name: `projects.${index}.tags` }) || []
 
   const handleAddTag = () => {
     const trimmed = newTag.trim().toUpperCase()
     if (!trimmed) return
-    if (project.tags.includes(trimmed)) {
+    if (currentTags.includes(trimmed)) {
       setNewTag('')
       return
     }
 
-    const updatedTags = [...project.tags, trimmed]
-    onUpdate(index, { ...project, tags: updatedTags })
+    appendTag(trimmed)
     setNewTag('')
   }
 
@@ -44,8 +58,7 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
   }
 
   const handleRemoveTag = (tagIndex: number) => {
-    const updatedTags = project.tags.filter((_, idx) => idx !== tagIndex)
-    onUpdate(index, { ...project, tags: updatedTags })
+    removeTag(tagIndex)
   }
 
   return (
@@ -59,7 +72,7 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
           onClick={() => onDelete(index)}
           variant="destructive"
           size="xs"
-          aria-label={`Delete project ${project.title || index + 1}`}
+          aria-label={`Delete project ${title || index + 1}`}
         >
           <Trash2 className="w-3.5 h-3.5" />
           Delete
@@ -78,8 +91,7 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
             id={`proj-title-${index}`}
             type="text"
             required
-            value={project.title}
-            onChange={(e) => handleFieldChange('title', e.target.value)}
+            {...register(`projects.${index}.title`)}
             placeholder="e.g. Distributed Cache System"
             aria-invalid={Boolean(errors?.title)}
           />
@@ -101,8 +113,7 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
             id={`proj-desc-${index}`}
             rows={3}
             required
-            value={project.description}
-            onChange={(e) => handleFieldChange('description', e.target.value)}
+            {...register(`projects.${index}.description`)}
             placeholder="Describe the architecture, problem solved, impact, and engineering techniques used..."
             aria-invalid={Boolean(errors?.description)}
           />
@@ -124,8 +135,7 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
             <Input
               id={`proj-start-${index}`}
               type="text"
-              value={project.startDate || ''}
-              onChange={(e) => handleFieldChange('startDate', e.target.value)}
+              {...register(`projects.${index}.startDate`)}
               placeholder="e.g. SEP 2023"
             />
           </div>
@@ -140,8 +150,7 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
             <Input
               id={`proj-end-${index}`}
               type="text"
-              value={project.endDate || ''}
-              onChange={(e) => handleFieldChange('endDate', e.target.value)}
+              {...register(`projects.${index}.endDate`)}
               placeholder="e.g. DEC 2023 or Present"
               aria-invalid={Boolean(errors?.endDate)}
             />
@@ -159,26 +168,29 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
           </label>
 
           <div className="flex flex-wrap gap-2 mb-2 min-h-[30px] items-center">
-            {project.tags.length === 0 ? (
+            {tagFields.length === 0 ? (
               <span className="text-xs text-text-muted/60 italic">No tags added yet.</span>
             ) : (
-              project.tags.map((tag, tIdx) => (
-                <span
-                  key={tIdx}
-                  className="inline-flex items-center gap-1.5 bg-card text-text-main text-xs font-mono px-2.5 py-1 rounded-lg border border-border-subtle shadow-xs"
-                >
-                  {tag}
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTag(tIdx)}
-                    className="text-text-muted hover:text-red-500 hover:bg-red-50 p-0.5 rounded active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-red-500"
-                    title="Remove tag"
-                    aria-label={`Remove tag ${tag}`}
+              tagFields.map((tagField, tIdx) => {
+                const tag = currentTags[tIdx] ?? ''
+                return (
+                  <span
+                    key={tagField.id}
+                    className="inline-flex items-center gap-1.5 bg-card text-text-main text-xs font-mono px-2.5 py-1 rounded-lg border border-border-subtle shadow-xs"
                   >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              ))
+                    {tag}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(tIdx)}
+                      className="text-text-muted hover:text-red-500 hover:bg-red-50 p-0.5 rounded active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-red-500"
+                      title="Remove tag"
+                      aria-label={`Remove tag ${tag}`}
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                )
+              })
             )}
           </div>
 
@@ -203,10 +215,22 @@ function ProjectCardEditor({ project, index, onUpdate, onDelete, errors }: Proje
 }
 
 export default function ProjectsEditSection({
-  projects,
+  control: controlProp,
+  projects: projectsProp,
   onChange,
   errors,
 }: ProjectsEditSectionProps) {
+  const formContext = useFormContext<FullProfileState>()
+  const control = controlProp ?? formContext?.control
+
+  const fieldArray = useFieldArray({
+    control,
+    name: 'projects',
+  })
+
+  const isFieldArrayActive = Boolean(control)
+  const fields = isFieldArrayActive ? fieldArray.fields : projectsProp || []
+
   const handleAddProject = () => {
     const newProj: Project = {
       id: `proj-${Date.now()}`,
@@ -216,17 +240,19 @@ export default function ProjectsEditSection({
       startDate: '',
       endDate: '',
     }
-    onChange([...projects, newProj])
+    if (isFieldArrayActive) {
+      fieldArray.append(newProj)
+    } else if (onChange && projectsProp) {
+      onChange([...projectsProp, newProj])
+    }
   }
 
   const handleDeleteProject = (index: number) => {
-    onChange(projects.filter((_, idx) => idx !== index))
-  }
-
-  const handleUpdateProject = (index: number, updated: Project) => {
-    const nextProjects = [...projects]
-    nextProjects[index] = updated
-    onChange(nextProjects)
+    if (isFieldArrayActive) {
+      fieldArray.remove(index)
+    } else if (onChange && projectsProp) {
+      onChange(projectsProp.filter((_, idx) => idx !== index))
+    }
   }
 
   return (
@@ -245,7 +271,7 @@ export default function ProjectsEditSection({
       </div>
 
       <div className="space-y-6">
-        {projects.length === 0 ? (
+        {fields.length === 0 ? (
           <div className="text-center py-8 bg-bg-page rounded-2xl border border-dashed border-border-muted">
             <p className="text-sm text-text-muted mb-3">No projects added yet.</p>
             <Button onClick={handleAddProject} variant="secondary" size="xs">
@@ -254,12 +280,10 @@ export default function ProjectsEditSection({
             </Button>
           </div>
         ) : (
-          projects.map((project, idx) => (
+          fields.map((field, idx) => (
             <ProjectCardEditor
-              key={project.id || idx}
-              project={project}
+              key={field.id || idx}
               index={idx}
-              onUpdate={handleUpdateProject}
               onDelete={handleDeleteProject}
               errors={errors?.[idx]}
             />

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { ProfileProvider, useProfile } from '@/components/student-profile/ProfileContext'
 import EditProfileForm from './EditProfileForm'
@@ -114,7 +114,7 @@ describe('EditProfileForm', () => {
     expect(screen.queryByText('Project #3')).not.toBeInTheDocument()
   })
 
-  it('updates context state and redirects when Save Changes is clicked', () => {
+  it('updates context state and redirects when Save Changes is clicked', async () => {
     mockPush.mockClear()
 
     function TestContainer() {
@@ -139,8 +139,31 @@ describe('EditProfileForm', () => {
     const saveButtons = screen.getAllByRole('button', { name: /Save Changes/i })
     fireEvent.click(saveButtons[0]!)
 
-    expect(mockPush).toHaveBeenCalledWith('/student/profile')
-    expect(screen.getByTestId('profile-name-display')).toHaveTextContent('Jane Doe')
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/student/profile')
+      expect(screen.getByTestId('profile-name-display')).toHaveTextContent('Jane Doe')
+    })
+  })
+
+  it('displays validation errors and does not submit when required fields are empty', async () => {
+    mockPush.mockClear()
+
+    render(
+      <ProfileProvider>
+        <EditProfileForm />
+      </ProfileProvider>,
+    )
+
+    const nameInput = screen.getByLabelText(/Full Name/i)
+    fireEvent.change(nameInput, { target: { value: '' } })
+
+    const saveButtons = screen.getAllByRole('button', { name: /Save Changes/i })
+    fireEvent.click(saveButtons[0]!)
+
+    await waitFor(() => {
+      expect(screen.getByText('Full name is required')).toBeInTheDocument()
+      expect(mockPush).not.toHaveBeenCalled()
+    })
   })
 
   it('navigates back to /student/profile on Cancel without modifying context', () => {

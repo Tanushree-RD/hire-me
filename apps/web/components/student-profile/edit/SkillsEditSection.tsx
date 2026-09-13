@@ -2,16 +2,23 @@
 
 import { useState, type KeyboardEvent } from 'react'
 import { Check, Pencil, X, Plus } from 'lucide-react'
+import {
+  useFieldArray,
+  useFormContext,
+  useWatch,
+  type Control,
+  type FieldValues,
+} from 'react-hook-form'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { getCategoryIcon } from '../utils'
-import type { SkillCategory, SkillsEditSectionProps } from '../types'
+import type { SkillCategory, SkillsEditSectionProps, FullProfileState } from '../types'
 
 interface SkillCategoryEditorProps {
   category: SkillCategory
   categoryIndex: number
-  onUpdateCategory: (index: number, updated: SkillCategory) => void
+  onUpdateCategory?: (index: number, updated: SkillCategory) => void
 }
 
 function SkillCategoryEditor({
@@ -19,23 +26,47 @@ function SkillCategoryEditor({
   categoryIndex,
   onUpdateCategory,
 }: SkillCategoryEditorProps) {
+  const formContext = useFormContext<FullProfileState>()
+  const control = formContext?.control
+  const setValue = formContext?.setValue
+
   const [newSkillText, setNewSkillText] = useState('')
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [editingValue, setEditingValue] = useState('')
 
+  const {
+    fields: skillFields,
+    append: appendSkill,
+    remove: removeSkill,
+  } = useFieldArray<FieldValues>({
+    control: control as unknown as Control<FieldValues>,
+    name: `skills.${categoryIndex}.skills`,
+  })
+
+  const watchedSkills = useWatch({
+    control,
+    name: `skills.${categoryIndex}.skills` as const,
+  })
+
+  const isFieldArrayActive = Boolean(control)
+  const currentSkills = isFieldArrayActive ? watchedSkills || [] : category.skills
+
   const handleAddSkill = () => {
     const trimmed = newSkillText.trim()
     if (!trimmed) return
-    if (category.skills.some((s) => s.toLowerCase() === trimmed.toLowerCase())) {
+    if (currentSkills.some((s: string) => s.toLowerCase() === trimmed.toLowerCase())) {
       setNewSkillText('')
       return
     }
 
-    const updated = {
-      ...category,
-      skills: [...category.skills, trimmed],
+    if (isFieldArrayActive) {
+      appendSkill(trimmed)
+    } else if (onUpdateCategory) {
+      onUpdateCategory(categoryIndex, {
+        ...category,
+        skills: [...category.skills, trimmed],
+      })
     }
-    onUpdateCategory(categoryIndex, updated)
     setNewSkillText('')
   }
 
@@ -47,11 +78,14 @@ function SkillCategoryEditor({
   }
 
   const handleRemoveSkill = (skillIndex: number) => {
-    const updated = {
-      ...category,
-      skills: category.skills.filter((_, idx) => idx !== skillIndex),
+    if (isFieldArrayActive) {
+      removeSkill(skillIndex)
+    } else if (onUpdateCategory) {
+      onUpdateCategory(categoryIndex, {
+        ...category,
+        skills: category.skills.filter((_, idx) => idx !== skillIndex),
+      })
     }
-    onUpdateCategory(categoryIndex, updated)
   }
 
   const handleStartEdit = (index: number, currentValue: string) => {
@@ -63,7 +97,12 @@ function SkillCategoryEditor({
     const trimmed = editingValue.trim()
     if (!trimmed) {
       handleRemoveSkill(skillIndex)
-    } else {
+    } else if (isFieldArrayActive && setValue) {
+      setValue(`skills.${categoryIndex}.skills.${skillIndex}`, trimmed, {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
+    } else if (onUpdateCategory) {
       const updatedSkills = [...category.skills]
       updatedSkills[skillIndex] = trimmed
       onUpdateCategory(categoryIndex, { ...category, skills: updatedSkills })
@@ -83,6 +122,7 @@ function SkillCategoryEditor({
   }
 
   const CategoryIcon = getCategoryIcon(category.label)
+  const skillCount = isFieldArrayActive ? skillFields.length : category.skills.length
 
   return (
     <div className="p-5 rounded-2xl bg-bg-page border border-border-subtle hover:border-border-muted transition-all duration-200 space-y-3.5">
@@ -91,14 +131,79 @@ function SkillCategoryEditor({
         <h3 className="text-xs font-bold text-text-muted uppercase tracking-wider">
           {category.label}
         </h3>
-        <span className="text-xs text-text-muted/60 font-mono">({category.skills.length})</span>
+        <span className="text-xs text-text-muted/60 font-mono">({skillCount})</span>
       </div>
 
       <div className="flex flex-wrap gap-2 min-h-[36px] items-center">
-        {category.skills.length === 0 ? (
+        {skillCount === 0 ? (
           <span className="text-xs text-text-muted/60 italic">
             No skills added yet in this category.
           </span>
+        ) : isFieldArrayActive ? (
+          skillFields.map((skillField, sIdx) => {
+            const skill = currentSkills[sIdx] ?? ''
+            const isEditing = editingIndex === sIdx
+
+            if (isEditing) {
+              return (
+                <div
+                  key={skillField.id}
+                  className="inline-flex items-center gap-1 bg-card border-2 border-brand rounded-lg px-1.5 py-0.5 shadow-xs"
+                >
+                  <input
+                    type="text"
+                    value={editingValue}
+                    onChange={(e) => setEditingValue(e.target.value)}
+                    onKeyDown={(e) => handleEditKeyDown(e, sIdx)}
+                    onBlur={() => handleSaveEdit(sIdx)}
+                    autoFocus
+                    className="text-xs font-mono text-text-main bg-transparent outline-none w-24 px-1"
+                  />
+                  <button
+                    type="button"
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      handleSaveEdit(sIdx)
+                    }}
+                    className="text-brand-dark hover:text-brand p-1 rounded-lg hover:bg-brand-light active:scale-95 transition-all duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-brand"
+                    title="Save skill"
+                    aria-label={`Save ${skill}`}
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )
+            }
+
+            return (
+              <div
+                key={skillField.id}
+                className="group inline-flex items-center gap-1.5 bg-card text-text-main text-xs font-mono px-2.5 py-1 rounded-lg border border-border-subtle shadow-xs hover:border-border-muted transition-all"
+              >
+                <span>{skill}</span>
+
+                <button
+                  type="button"
+                  onClick={() => handleStartEdit(sIdx, skill)}
+                  className="opacity-60 hover:opacity-100 text-text-muted hover:text-brand-dark hover:bg-bg-page active:scale-95 transition-all duration-150 cursor-pointer p-0.5 rounded"
+                  title="Edit skill"
+                  aria-label={`Edit ${skill}`}
+                >
+                  <Pencil className="w-3 h-3" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSkill(sIdx)}
+                  className="opacity-60 hover:opacity-100 text-text-muted hover:text-red-500 hover:bg-red-50 active:scale-95 transition-all duration-150 cursor-pointer p-0.5 rounded"
+                  title="Remove skill"
+                  aria-label={`Remove ${skill}`}
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )
+          })
         ) : (
           category.skills.map((skill, sIdx) => {
             const isEditing = editingIndex === sIdx
@@ -186,11 +291,28 @@ function SkillCategoryEditor({
   )
 }
 
-export default function SkillsEditSection({ categories, onChange }: SkillsEditSectionProps) {
+export default function SkillsEditSection({
+  control: controlProp,
+  categories: categoriesProp,
+  onChange,
+}: SkillsEditSectionProps) {
+  const formContext = useFormContext<FullProfileState>()
+  const control = controlProp ?? formContext?.control
+
+  const fieldArray = useFieldArray({
+    control,
+    name: 'skills',
+  })
+
+  const isFieldArrayActive = Boolean(control)
+  const categories = isFieldArrayActive ? fieldArray.fields : categoriesProp || []
+
   const handleUpdateCategory = (index: number, updated: SkillCategory) => {
-    const nextCategories = [...categories]
-    nextCategories[index] = updated
-    onChange(nextCategories)
+    if (onChange && categoriesProp) {
+      const nextCategories = [...categoriesProp]
+      nextCategories[index] = updated
+      onChange(nextCategories)
+    }
   }
 
   return (
@@ -205,7 +327,7 @@ export default function SkillsEditSection({ categories, onChange }: SkillsEditSe
       <div className="space-y-4">
         {categories.map((cat, idx) => (
           <SkillCategoryEditor
-            key={cat.label}
+            key={'id' in cat ? (cat.id as string) : cat.label || idx}
             category={cat}
             categoryIndex={idx}
             onUpdateCategory={handleUpdateCategory}

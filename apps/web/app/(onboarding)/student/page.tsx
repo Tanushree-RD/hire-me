@@ -7,6 +7,9 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { useForm } from 'react-hook-form'
 
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
 import { useSaveStudentProfile } from '@/lib/hooks/use-onboarding'
 import {
   studentCompleteOnboardingSchema,
@@ -602,11 +605,11 @@ export default function StudentOnboardingPage() {
                       <label className="block text-xs font-bold text-slate-800 mb-1">
                         Full Name <span className="text-red-500">*</span>
                       </label>
-                      <input
+                      <Input
                         type="text"
                         {...register('fullName')}
                         placeholder="e.g. Alex Chen"
-                        className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                        className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                       />
                     </div>
 
@@ -620,12 +623,12 @@ export default function StudentOnboardingPage() {
                           {headline.length}/80
                         </span>
                       </div>
-                      <input
+                      <Input
                         type="text"
                         maxLength={80}
                         {...register('headline')}
                         placeholder="e.g. CS Student | Full-Stack Developer | Open to Internships"
-                        className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                        className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                       />
                     </div>
 
@@ -683,11 +686,11 @@ export default function StudentOnboardingPage() {
                         <label className="block text-xs font-bold text-slate-800 mb-1">
                           School / University <span className="text-red-500">*</span>
                         </label>
-                        <input
+                        <Input
                           type="text"
                           {...register('school')}
                           placeholder="e.g. Stanford University or MIT"
-                          className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                          className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                         />
                       </div>
 
@@ -696,11 +699,11 @@ export default function StudentOnboardingPage() {
                           <label className="block text-xs font-bold text-slate-800 mb-1">
                             Degree &amp; Major <span className="text-red-500">*</span>
                           </label>
-                          <input
+                          <Input
                             type="text"
                             {...register('degree')}
                             placeholder="e.g. B.S. Computer Science"
-                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
 
@@ -726,11 +729,11 @@ export default function StudentOnboardingPage() {
                           <label className="block text-xs font-bold text-slate-800 mb-1">
                             GPA (Optional)
                           </label>
-                          <input
+                          <Input
                             type="text"
                             {...register('gpa')}
                             placeholder="e.g. 3.8 / 4.0"
-                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
 
@@ -738,11 +741,11 @@ export default function StudentOnboardingPage() {
                           <label className="block text-xs font-bold text-slate-800 mb-1">
                             Specialization (Optional)
                           </label>
-                          <input
+                          <Input
                             type="text"
                             {...register('specialization')}
                             placeholder="e.g. AI / Machine Learning"
-                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                       </div>
@@ -777,7 +780,7 @@ export default function StudentOnboardingPage() {
                         Technical Skills
                       </label>
                       <div className="flex gap-2">
-                        <input
+                        <Input
                           type="text"
                           value={newSkillInput}
                           onChange={(e) => setNewSkillInput(e.target.value)}
@@ -788,34 +791,38 @@ export default function StudentOnboardingPage() {
                             }
                           }}
                           placeholder="Type a skill and press Enter..."
-                          className="flex-1 px-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                          className="flex-1 px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                         />
-                        <button
+                        <Button
                           type="button"
                           onClick={() => handleAddSkill()}
-                          className="px-3.5 py-2 bg-brand hover:bg-brand-hover text-white font-semibold rounded-xl text-xs sm:text-sm transition cursor-pointer flex items-center gap-1 shrink-0"
+                          className="px-3.5 py-2 bg-brand hover:bg-brand-hover text-white font-semibold rounded-xl text-xs sm:text-sm flex items-center gap-1 shrink-0 h-auto"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>Add</span>
-                        </button>
+                        </Button>
                       </div>
 
                       {/* Added Skills Badges */}
                       <div className="flex flex-wrap gap-1.5 max-h-[58px] overflow-hidden">
                         {skills.map((s) => (
-                          <span
+                          <Badge
                             key={s}
+                            variant="secondary"
                             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-light text-brand-dark text-xs font-bold border border-brand/20 shadow-2xs"
                           >
-                            {s}
-                            <button
+                            <span>{s}</span>
+                            <Button
                               type="button"
+                              variant="ghost"
+                              size="icon"
                               onClick={() => handleRemoveSkill(s)}
-                              className="hover:text-red-500 cursor-pointer"
+                              className="h-3.5 w-3.5 p-0 hover:bg-transparent hover:text-red-500 text-brand-dark"
+                              aria-label={`Remove skill ${s}`}
                             >
                               <X className="w-3 h-3" />
-                            </button>
-                          </span>
+                            </Button>
+                          </Badge>
                         ))}
                       </div>
 
@@ -828,14 +835,16 @@ export default function StudentOnboardingPage() {
                           .filter((s) => !skills.includes(s))
                           .slice(0, 5)
                           .map((suggestion) => (
-                            <button
+                            <Button
                               key={suggestion}
                               type="button"
+                              variant="ghost"
+                              size="xs"
                               onClick={() => handleAddSkill(suggestion)}
-                              className="text-[10px] font-medium bg-slate-100 hover:bg-brand-light hover:text-brand-hover text-slate-600 px-2 py-0.5 rounded-md transition cursor-pointer"
+                              className="text-[10px] font-medium bg-slate-100 hover:bg-brand-light hover:text-brand-hover text-slate-600 px-2 py-0.5 rounded-md h-auto"
                             >
                               + {suggestion}
-                            </button>
+                            </Button>
                           ))}
                       </div>
                     </div>
@@ -847,25 +856,25 @@ export default function StudentOnboardingPage() {
                       </h4>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        <input
+                        <Input
                           type="text"
                           {...register('experienceRole')}
                           placeholder="Role (e.g. Frontend Intern)"
-                          className="w-full px-3 py-1.5 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs transition bg-card"
+                          className="w-full px-3 py-1.5 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs bg-card h-auto"
                         />
-                        <input
+                        <Input
                           type="text"
                           {...register('experienceCompany')}
                           placeholder="Company (e.g. DK24 Labs)"
-                          className="w-full px-3 py-1.5 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs transition bg-card"
+                          className="w-full px-3 py-1.5 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs bg-card h-auto"
                         />
                       </div>
 
-                      <input
+                      <Input
                         type="text"
                         {...register('experienceSummary')}
                         placeholder="Brief summary of achievements or projects..."
-                        className="w-full px-3 py-1.5 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs transition bg-card"
+                        className="w-full px-3 py-1.5 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs bg-card h-auto"
                       />
                     </div>
                   </motion.div>
@@ -899,12 +908,12 @@ export default function StudentOnboardingPage() {
                           GitHub Profile URL
                         </label>
                         <div className="relative flex items-center">
-                          <GithubIcon className="w-4 h-4 text-slate-400 absolute left-3" />
-                          <input
+                          <GithubIcon className="w-4 h-4 text-slate-400 absolute left-3 z-10" />
+                          <Input
                             type="url"
                             {...register('githubUrl')}
                             placeholder="https://github.com/yourusername"
-                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                         {errors.githubUrl && (
@@ -920,12 +929,12 @@ export default function StudentOnboardingPage() {
                           LinkedIn Profile URL
                         </label>
                         <div className="relative flex items-center">
-                          <LinkedinIcon className="w-4 h-4 text-linkedin absolute left-3" />
-                          <input
+                          <LinkedinIcon className="w-4 h-4 text-linkedin absolute left-3 z-10" />
+                          <Input
                             type="url"
                             {...register('linkedinUrl')}
                             placeholder="https://linkedin.com/in/yourusername"
-                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                         {errors.linkedinUrl && (
@@ -941,12 +950,12 @@ export default function StudentOnboardingPage() {
                           Portfolio / Website (Optional)
                         </label>
                         <div className="relative flex items-center">
-                          <Globe className="w-4 h-4 text-slate-400 absolute left-3" />
-                          <input
+                          <Globe className="w-4 h-4 text-slate-400 absolute left-3 z-10" />
+                          <Input
                             type="url"
                             {...register('portfolioUrl')}
                             placeholder="https://yourportfolio.dev"
-                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                         {errors.portfolioUrl && (
@@ -962,12 +971,12 @@ export default function StudentOnboardingPage() {
                           Resume / CV Link (Optional)
                         </label>
                         <div className="relative flex items-center">
-                          <FileText className="w-4 h-4 text-slate-400 absolute left-3" />
-                          <input
+                          <FileText className="w-4 h-4 text-slate-400 absolute left-3 z-10" />
+                          <Input
                             type="url"
                             {...register('resumeUrl')}
                             placeholder="https://drive.google.com/... or resume URL"
-                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card"
+                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                         {errors.resumeUrl && (
@@ -985,21 +994,22 @@ export default function StudentOnboardingPage() {
             {/* Bottom Actions Bar (Fixed at bottom of right column) */}
             <div className="flex items-center justify-between pt-3 border-t border-border-subtle/50 shrink-0">
               {/* Back Button */}
-              <button
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={handleBack}
-                className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition cursor-pointer active:scale-[0.98]"
+                className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition cursor-pointer active:scale-[0.98] h-auto shadow-none"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back</span>
-              </button>
+              </Button>
 
               {/* Next / Complete Button */}
-              <button
+              <Button
                 type="button"
                 onClick={handleNext}
                 disabled={isCompleted || saveStudentMutation.isPending}
-                className="flex items-center gap-2 px-5 sm:px-6 py-2 rounded-xl bg-action-dark hover:bg-black text-white font-semibold text-xs sm:text-sm transition shadow-md hover:shadow-lg cursor-pointer active:scale-[0.98] disabled:opacity-70"
+                className="flex items-center gap-2 px-5 sm:px-6 py-2 rounded-xl bg-action-dark hover:bg-black text-white font-semibold text-xs sm:text-sm transition shadow-md hover:shadow-lg cursor-pointer active:scale-[0.98] disabled:opacity-70 h-auto"
               >
                 {step < 4 ? (
                   <>
@@ -1012,7 +1022,7 @@ export default function StudentOnboardingPage() {
                     <Sparkles className="w-4 h-4 text-brand-emerald" />
                   </>
                 )}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

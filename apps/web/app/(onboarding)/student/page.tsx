@@ -2,7 +2,18 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion, AnimatePresence } from 'motion/react'
-import { ArrowLeft, ArrowRight, Check, Code, FileText, Globe, Link, Plus, Sparkles, X } from 'lucide-react'
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Code,
+  FileText,
+  Globe,
+  Link,
+  Plus,
+  Sparkles,
+  X,
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { useForm } from 'react-hook-form'

@@ -2,25 +2,19 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion, AnimatePresence } from 'motion/react'
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  Code,
-  FileText,
-  Globe,
-  Link,
-  Plus,
-  Sparkles,
-  X,
-} from 'lucide-react'
+import { ArrowLeft, ArrowRight, Code, FileText, Globe, Link, Plus, Sparkles, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { StudentMascotHero } from '@/components/onboarding/student-mascot-hero'
+import {
+  StudentOnboardingStepper,
+  type StepNumber,
+} from '@/components/onboarding/student-onboarding-stepper'
 import { useSaveStudentProfile } from '@/lib/hooks/use-onboarding'
 import {
   studentCompleteOnboardingSchema,
@@ -47,13 +41,22 @@ const DEFAULT_STUDENT_VALUES: StudentOnboardingInput = {
   resumeUrl: '',
 }
 
+const GRADUATION_YEAR_OPTIONS = ['2024', '2025', '2026', '2027', '2028', '2029', '2030']
+const POPULAR_SKILL_SUGGESTIONS = [
+  'Python',
+  'JavaScript',
+  'Node.js',
+  'SQL',
+  'Docker',
+  'Git',
+  'Java',
+]
+
 export default function StudentOnboardingPage() {
   const router = useRouter()
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
+  const [step, setStep] = useState<StepNumber>(1)
   const [isCompleted, setIsCompleted] = useState(false)
   const [newSkillInput, setNewSkillInput] = useState('')
-  const [step1Error, setStep1Error] = useState('')
-  const [step2Error, setStep2Error] = useState('')
 
   const saveStudentMutation = useSaveStudentProfile()
 
@@ -61,8 +64,9 @@ export default function StudentOnboardingPage() {
     register,
     handleSubmit,
     setValue,
-    watch,
     trigger,
+    control,
+    getValues,
     formState: { errors },
   } = useForm<StudentOnboardingInput>({
     resolver: zodResolver(studentCompleteOnboardingSchema),
@@ -70,12 +74,8 @@ export default function StudentOnboardingPage() {
     defaultValues: DEFAULT_STUDENT_VALUES,
   })
 
-  const fullName = watch('fullName') || ''
-  const headline = watch('headline') || ''
-  const bio = watch('bio') || ''
-  const school = watch('school') || ''
-  const degree = watch('degree') || ''
-  const skills = watch('skills') || []
+  // Watch skills array specifically for rendering skill badges in Step 3
+  const skills = useWatch({ control, name: 'skills' }) || []
 
   // Interactive Character Eye Tracking & Blinking
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
@@ -94,30 +94,38 @@ export default function StudentOnboardingPage() {
   }
 
   useEffect(() => {
-    const interval = setInterval(
+    let timeoutId: NodeJS.Timeout
+
+    const intervalId = setInterval(
       () => {
         setBlink(true)
-        setTimeout(() => setBlink(false), 140)
+        timeoutId = setTimeout(() => setBlink(false), 140)
       },
       3200 + Math.random() * 2600,
     )
-    return () => clearInterval(interval)
+
+    return () => {
+      clearInterval(intervalId)
+      if (timeoutId) clearTimeout(timeoutId)
+    }
   }, [])
 
-  // Skills handlers
+  // Skills management handlers
   const handleAddSkill = (skillToAdd?: string) => {
     const target = (skillToAdd || newSkillInput).trim()
     if (!target) return
-    if (!skills.includes(target)) {
-      setValue('skills', [...skills, target], { shouldValidate: true })
+    const currentSkills = getValues('skills') || []
+    if (!currentSkills.includes(target)) {
+      setValue('skills', [...currentSkills, target], { shouldValidate: true })
     }
     setNewSkillInput('')
   }
 
   const handleRemoveSkill = (skillToRemove: string) => {
+    const currentSkills = getValues('skills') || []
     setValue(
       'skills',
-      skills.filter((s) => s !== skillToRemove),
+      currentSkills.filter((s) => s !== skillToRemove),
       { shouldValidate: true },
     )
   }
@@ -132,30 +140,21 @@ export default function StudentOnboardingPage() {
         router.push('/landing')
       }, ONBOARDING_REDIRECT_DELAY_MS)
     } catch {
-      // Error handled in mutation
+      // Error handled by mutation hook
     }
   }
 
-  // Stepper navigation
+  // Stepper navigation with Zod schema validation
   const handleNext = async () => {
     if (step === 1) {
       const valid = await trigger(['fullName', 'headline'])
-      if (!fullName.trim() || !headline.trim() || !valid) {
-        setStep1Error('Please fill in your full name and headline.')
-        return
-      }
-      setStep1Error('')
-      setStep(2)
+      if (valid) setStep(2)
     } else if (step === 2) {
       const valid = await trigger(['school', 'degree'])
-      if (!school.trim() || !degree.trim() || !valid) {
-        setStep2Error('Please provide your School/University and Degree.')
-        return
-      }
-      setStep2Error('')
-      setStep(3)
+      if (valid) setStep(3)
     } else if (step === 3) {
-      setStep(4)
+      const valid = await trigger('skills')
+      if (valid) setStep(4)
     } else if (step === 4) {
       void handleSubmit(onFinalSubmit)()
     }
@@ -165,530 +164,165 @@ export default function StudentOnboardingPage() {
     if (step === 1) {
       router.push('/role-select')
     } else {
-      setStep((prev) => (prev - 1) as 1 | 2 | 3 | 4)
+      setStep((prev) => (prev - 1) as StepNumber)
     }
   }
-
-  const gradYearOptions = ['2024', '2025', '2026', '2027', '2028', '2029', '2030']
-  const popularSkills = ['Python', 'JavaScript', 'Node.js', 'SQL', 'Docker', 'Git', 'Java']
 
   return (
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="h-screen w-screen bg-bg-page text-text-main flex flex-col justify-between overflow-hidden font-['Plus_Jakarta_Sans',sans-serif] select-none selection:bg-brand/20 selection:text-text-main"
+      className="h-screen w-screen bg-bg-page text-text-main flex flex-col justify-between overflow-hidden font-sans select-none selection:bg-brand/20 selection:text-text-main"
     >
       {/* Top Navbar */}
       <header className="w-full z-20 shrink-0">
-        <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-10 py-3 sm:py-4 flex items-center justify-between">
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-3 sm:py-4 flex items-center justify-between">
           {/* Logo */}
-          <div
-            className="flex items-center gap-1.5 text-2xl tracking-tight cursor-pointer"
+          <button
+            type="button"
+            className="flex items-center gap-1.5 text-2xl tracking-tight cursor-pointer bg-transparent border-0 text-left p-0 outline-none"
             onClick={() => router.push('/')}
           >
             <span className="font-extrabold text-brand">DK24</span>
             <span className="font-bold text-text-main">CareerLink</span>
-          </div>
+          </button>
         </div>
       </header>
 
       {/* Main Container Fixed-Height Card */}
       <main className="flex-1 w-full flex items-center justify-center px-4 sm:px-8 py-2 z-10 overflow-hidden">
-        <div className="w-full max-w-[1240px] h-[550px] sm:h-[570px] lg:h-[580px] bg-card rounded-3xl sm:rounded-[32px] border border-border-subtle shadow-[0_12px_44px_-12px_rgba(0,0,0,0.06)] overflow-hidden grid grid-cols-1 lg:grid-cols-12">
-          {/* ========================================================================= */}
-          {/* LEFT COLUMN: HERO & 3D STUDENT WITH LAPTOP (Fixed Height) */}
-          {/* ========================================================================= */}
-          <div className="lg:col-span-5 bg-gradient-to-b from-surface-hero-start to-surface-hero-end border-b lg:border-b-0 lg:border-r border-border-subtle/50 p-6 sm:p-8 lg:p-9 flex flex-col justify-between h-full relative overflow-hidden">
-            {/* Top Content */}
-            <div className="space-y-4 z-10">
-              {/* Title & Subtitle */}
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-text-main tracking-tight leading-[1.2]">
-                  Let&apos;s build your <br />
-                  <span className="text-brand inline-flex items-center gap-1.5">
-                    career profile
-                  </span>
-                </h1>
-                <p className="text-text-muted text-xs sm:text-sm font-medium leading-relaxed mt-2 max-w-[360px]">
-                  A complete profile helps recruiters discover you and gives you better
-                  opportunities.
-                </p>
-              </div>
-            </div>
+        <div className="w-full max-w-6xl h-full max-h-[580px] bg-card rounded-3xl sm:rounded-2xl border border-border-subtle shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+          {/* LEFT COLUMN: HERO & 3D MASCOT */}
+          <StudentMascotHero mousePos={mousePos} blink={blink} />
 
-            {/* Bottom 3D Scene: Student Character with Laptop */}
-            <div className="relative w-full flex-1 min-h-[220px] max-h-[340px] flex items-center justify-center select-none py-1">
-              <svg
-                viewBox="35 65 310 195"
-                className="w-full h-full max-h-[320px] overflow-visible drop-shadow-sm"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <filter id="clayShadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow
-                      dx="0"
-                      dy="8"
-                      stdDeviation="12"
-                      floodColor="#0F172A"
-                      floodOpacity="0.12"
-                    />
-                  </filter>
-                  <filter id="badgeShadow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feDropShadow
-                      dx="0"
-                      dy="4"
-                      stdDeviation="5"
-                      floodColor="#0F172A"
-                      floodOpacity="0.1"
-                    />
-                  </filter>
-                  <filter id="laptopShadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow
-                      dx="0"
-                      dy="10"
-                      stdDeviation="8"
-                      floodColor="#0F172A"
-                      floodOpacity="0.13"
-                    />
-                  </filter>
-
-                  <radialGradient id="greenClaySphere" cx="35%" cy="30%" r="68%">
-                    <stop offset="0%" stopColor="var(--clay-sphere-start)" />
-                    <stop offset="28%" stopColor="var(--brand-green)" />
-                    <stop offset="70%" stopColor="var(--clay-sphere-mid2)" />
-                    <stop offset="90%" stopColor="var(--clay-sphere-dark)" />
-                    <stop offset="100%" stopColor="var(--clay-sphere-end)" />
-                  </radialGradient>
-
-                  <linearGradient id="capTop" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#333A44" />
-                    <stop offset="50%" stopColor="#22272E" />
-                    <stop offset="100%" stopColor="#14181F" />
-                  </linearGradient>
-                  <linearGradient id="capBevel" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#181D24" />
-                    <stop offset="100%" stopColor="#0D1015" />
-                  </linearGradient>
-
-                  <linearGradient id="laptopLid" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#F1F5F9" />
-                    <stop offset="50%" stopColor="#E2E8F0" />
-                    <stop offset="100%" stopColor="#CBD5E1" />
-                  </linearGradient>
-                  <linearGradient id="laptopBase" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#E2E8F0" />
-                    <stop offset="100%" stopColor="#94A3B8" />
-                  </linearGradient>
-                </defs>
-
-                {/* Ground Shadow */}
-                <ellipse cx="200" cy="245" rx="130" ry="10" fill="#0F172A" opacity="0.07" />
-
-                {/* 3D Student Character */}
-                <g transform="translate(130, 165)">
-                  <circle
-                    cx="0"
-                    cy="0"
-                    r="62"
-                    fill="url(#greenClaySphere)"
-                    filter="url(#clayShadow)"
-                  />
-
-                  {/* Graduation Cap */}
-                  <g transform="translate(-22, -60) rotate(-16)">
-                    <path
-                      d="M -24,10 C -24,-2 24,-2 24,10 C 24,18 -24,18 -24,10 Z"
-                      fill="#12161D"
-                    />
-                    <polygon points="-52,0 -52,5 0,22 52,5 52,0 0,17" fill="url(#capBevel)" />
-                    <polygon
-                      points="-52,0 0,-18 52,0 0,17"
-                      fill="url(#capTop)"
-                      stroke="#14181F"
-                      strokeWidth="1"
-                    />
-                    <ellipse cx="0" cy="0" rx="3.5" ry="2.5" fill="#10141A" />
-                    <path
-                      d="M 0,0 C -28,10 -38,22 -40,42"
-                      stroke="var(--brand-green)"
-                      strokeWidth="2.8"
-                      fill="none"
-                      strokeLinecap="round"
-                    />
-                    <ellipse cx="-40" cy="42" rx="3.5" ry="3" fill="var(--clay-sphere-mid2)" />
-                    <path d="M -44,43 C -44,56 -36,56 -36,43 Z" fill="var(--brand-green)" />
-                  </g>
-
-                  {/* Left Eye */}
-                  <g transform="translate(-8, -4) rotate(-3)">
-                    <ellipse cx="0" cy="0" rx="13" ry="12" fill="#FFFFFF" />
-                    <motion.circle
-                      cx={mousePos.x * 3 + 1.5}
-                      cy={mousePos.y * 2 + 3.5}
-                      r={5}
-                      fill="#1A202C"
-                      animate={{ scaleY: blink ? 0.1 : 1 }}
-                      transition={{ duration: 0.1 }}
-                    />
-                    {!blink && (
-                      <circle
-                        cx={mousePos.x * 1.8}
-                        cy={mousePos.y * 1.8 + 1.8}
-                        r="1.8"
-                        fill="#FFFFFF"
-                      />
-                    )}
-                  </g>
-
-                  {/* Right Eye */}
-                  <g transform="translate(22, -8) rotate(3)">
-                    <ellipse cx="0" cy="0" rx="13" ry="12" fill="#FFFFFF" />
-                    <motion.circle
-                      cx={mousePos.x * 3 + 1.5}
-                      cy={mousePos.y * 2 + 3.5}
-                      r={5}
-                      fill="#1A202C"
-                      animate={{ scaleY: blink ? 0.1 : 1 }}
-                      transition={{ duration: 0.1 }}
-                    />
-                    {!blink && (
-                      <circle
-                        cx={mousePos.x * 1.8}
-                        cy={mousePos.y * 1.8 + 1.8}
-                        r="1.8"
-                        fill="#FFFFFF"
-                      />
-                    )}
-                  </g>
-
-                  {/* Smile */}
-                  <g transform="translate(8, 14)">
-                    <path d="M -10,-2 Q 0,12 10,-2 Q 0,3 -10,-2 Z" fill="#1A202C" />
-                  </g>
-                </g>
-
-                {/* 3D Laptop */}
-                <g transform="translate(195, 180)" filter="url(#laptopShadow)">
-                  <polygon
-                    points="0,32 14,-32 96,-32 82,32"
-                    fill="url(#laptopLid)"
-                    stroke="#CBD5E1"
-                    strokeWidth="1.2"
-                  />
-                  <polygon points="4,30 16,-28 92,-28 80,30" fill="#1E293B" />
-                  <line
-                    x1="25"
-                    y1="-14"
-                    x2="74"
-                    y2="-14"
-                    stroke="var(--brand-green)"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                  />
-                  <line
-                    x1="22"
-                    y1="-5"
-                    x2="65"
-                    y2="-5"
-                    stroke="#38BDF8"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                  <line
-                    x1="20"
-                    y1="4"
-                    x2="55"
-                    y2="4"
-                    stroke="#818CF8"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                  <polygon
-                    points="-12,42 0,32 82,32 100,42"
-                    fill="url(#laptopBase)"
-                    stroke="#94A3B8"
-                    strokeWidth="1.2"
-                  />
-                  <polygon points="32,39 36,35 58,35 55,39" fill="#CBD5E1" />
-                </g>
-              </svg>
-            </div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* RIGHT COLUMN: MULTI-STEP WIZARD FORM (Fixed Height, No Scrolling) */}
-          {/* ========================================================================= */}
+          {/* RIGHT COLUMN: MULTI-STEP WIZARD FORM */}
           <div className="lg:col-span-7 p-6 sm:p-8 lg:p-9 flex flex-col justify-between h-full overflow-hidden">
             {/* Top Stepper Indicator */}
-            <div className="w-full shrink-0 pb-3 border-b border-border-subtle/50">
-              <div className="w-full flex items-start justify-between">
-                {/* Step 1: Basic Info */}
-                <div
-                  className="flex flex-col items-center gap-1.5 cursor-pointer group shrink-0"
-                  onClick={() => setStep(1)}
-                >
-                  <div
-                    className={`w-[34px] h-[34px] rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                      step > 1
-                        ? 'bg-brand text-white shadow-xs'
-                        : step === 1
-                          ? 'bg-brand text-white shadow-[0_0_0_5px_var(--brand-green-glow)]'
-                          : 'bg-card border-2 border-border-subtle text-text-muted group-hover:border-slate-300'
-                    }`}
-                  >
-                    {step > 1 ? <Check className="w-4 h-4 stroke-[3]" /> : '1'}
-                  </div>
-                  <span
-                    className={`text-[11px] whitespace-nowrap transition-colors ${
-                      step === 1
-                        ? 'font-bold text-brand'
-                        : step > 1
-                          ? 'font-semibold text-slate-700'
-                          : 'font-medium text-text-muted'
-                    }`}
-                  >
-                    Basic Info
-                  </span>
-                </div>
+            <StudentOnboardingStepper currentStep={step} onStepClick={setStep} />
 
-                {/* Connector Line 1 -> 2 */}
-                <div className="flex-1 h-[2px] bg-border-subtle mt-[16px] mx-1 sm:mx-2 relative overflow-hidden rounded-full">
-                  <div
-                    className="h-full bg-brand transition-all duration-400 ease-out"
-                    style={{ width: step > 1 ? '100%' : '0%' }}
-                  />
-                </div>
-
-                {/* Step 2: Education */}
-                <div
-                  className="flex flex-col items-center gap-1.5 cursor-pointer group shrink-0"
-                  onClick={() => step > 1 && setStep(2)}
-                >
-                  <div
-                    className={`w-[34px] h-[34px] rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                      step > 2
-                        ? 'bg-brand text-white shadow-xs'
-                        : step === 2
-                          ? 'bg-brand text-white shadow-[0_0_0_5px_var(--brand-green-glow)]'
-                          : 'bg-card border-2 border-border-subtle text-text-muted group-hover:border-slate-300'
-                    }`}
-                  >
-                    {step > 2 ? <Check className="w-4 h-4 stroke-[3]" /> : '2'}
-                  </div>
-                  <span
-                    className={`text-[11px] whitespace-nowrap transition-colors ${
-                      step === 2
-                        ? 'font-bold text-brand'
-                        : step > 2
-                          ? 'font-semibold text-slate-700'
-                          : 'font-medium text-text-muted'
-                    }`}
-                  >
-                    Education
-                  </span>
-                </div>
-
-                {/* Connector Line 2 -> 3 */}
-                <div className="flex-1 h-[2px] bg-border-subtle mt-[16px] mx-1 sm:mx-2 relative overflow-hidden rounded-full">
-                  <div
-                    className="h-full bg-brand transition-all duration-400 ease-out"
-                    style={{ width: step > 2 ? '100%' : '0%' }}
-                  />
-                </div>
-
-                {/* Step 3: Skills & Exp */}
-                <div
-                  className="flex flex-col items-center gap-1.5 cursor-pointer group shrink-0"
-                  onClick={() => step > 2 && setStep(3)}
-                >
-                  <div
-                    className={`w-[34px] h-[34px] rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                      step > 3
-                        ? 'bg-brand text-white shadow-xs'
-                        : step === 3
-                          ? 'bg-brand text-white shadow-[0_0_0_5px_var(--brand-green-glow)]'
-                          : 'bg-card border-2 border-border-subtle text-text-muted group-hover:border-slate-300'
-                    }`}
-                  >
-                    {step > 3 ? <Check className="w-4 h-4 stroke-[3]" /> : '3'}
-                  </div>
-                  <span
-                    className={`text-[11px] whitespace-nowrap transition-colors ${
-                      step === 3
-                        ? 'font-bold text-brand'
-                        : step > 3
-                          ? 'font-semibold text-slate-700'
-                          : 'font-medium text-text-muted'
-                    }`}
-                  >
-                    Skills &amp; Exp
-                  </span>
-                </div>
-
-                {/* Connector Line 3 -> 4 */}
-                <div className="flex-1 h-[2px] bg-border-subtle mt-[16px] mx-1 sm:mx-2 relative overflow-hidden rounded-full">
-                  <div
-                    className="h-full bg-brand transition-all duration-400 ease-out"
-                    style={{ width: step > 3 ? '100%' : '0%' }}
-                  />
-                </div>
-
-                {/* Step 4: Links & Finish */}
-                <div
-                  className="flex flex-col items-center gap-1.5 cursor-pointer group shrink-0"
-                  onClick={() => step > 3 && setStep(4)}
-                >
-                  <div
-                    className={`w-[34px] h-[34px] rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                      step === 4
-                        ? 'bg-brand text-white shadow-[0_0_0_5px_var(--brand-green-glow)]'
-                        : 'bg-card border-2 border-border-subtle text-text-muted'
-                    }`}
-                  >
-                    <span>4</span>
-                  </div>
-                  <span
-                    className={`text-[11px] whitespace-nowrap transition-colors ${
-                      step === 4 ? 'font-bold text-brand' : 'font-medium text-text-muted'
-                    }`}
-                  >
-                    Links &amp; Finish
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Step Form Content Body (Fixed Area, perfectly fitted) */}
-            <div className="flex-1 flex flex-col justify-center overflow-hidden py-1">
+            {/* Scrollable Form Content */}
+            <div className="flex-1 overflow-y-auto py-4 sm:py-5 pr-1 space-y-5 scrollbar-thin">
               <AnimatePresence mode="wait">
-                {/* ------------------------------------------------------------- */}
-                {/* STEP 1: BASIC DETAILS */}
-                {/* ------------------------------------------------------------- */}
+                {/* STEP 1: BASIC INFO */}
                 {step === 1 && (
                   <motion.div
-                    key="step-1"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.18 }}
-                    className="space-y-3.5"
+                    key="step1"
+                    initial={{ opacity: 0, x: 15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -15 }}
+                    transition={{ duration: 0.25 }}
+                    className="space-y-4"
                   >
                     <div>
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-text-main tracking-tight">
-                        Basic Details
+                      <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+                        Personal Information
                       </h2>
-                      <p className="text-xs text-text-muted font-medium mt-0.5">
-                        Start with the basics. You can update these anytime.
+                      <p className="text-xs text-text-muted mt-0.5">
+                        Tell us your name and how you want recruiters to see you.
                       </p>
                     </div>
 
-                    {(step1Error || errors.fullName || errors.headline) && (
-                      <div
-                        className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium"
-                        role="alert"
-                      >
-                        {step1Error || errors.fullName?.message || errors.headline?.message}
-                      </div>
-                    )}
-
-                    {/* Full Name */}
-                    <div>
-                      <label className="block text-xs font-bold text-slate-800 mb-1">
-                        Full Name <span className="text-red-500">*</span>
-                      </label>
-                      <Input
-                        type="text"
-                        {...register('fullName')}
-                        placeholder="e.g. Alex Chen"
-                        className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
-                      />
-                    </div>
-
-                    {/* Headline */}
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="text-xs font-bold text-slate-800">
-                          Headline <span className="text-red-500">*</span>
+                    <div className="space-y-3.5">
+                      {/* Full Name */}
+                      <div>
+                        <label className="block text-xs font-bold text-slate-800 mb-1">
+                          Full Name <span className="text-rose-500">*</span>
                         </label>
-                        <span className="text-[11px] text-text-muted font-mono">
-                          {headline.length}/80
-                        </span>
+                        <Input
+                          type="text"
+                          {...register('fullName')}
+                          placeholder="e.g. Alex Rivera"
+                          className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
+                        />
+                        {errors.fullName && (
+                          <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
+                            {errors.fullName.message}
+                          </p>
+                        )}
                       </div>
-                      <Input
-                        type="text"
-                        maxLength={80}
-                        {...register('headline')}
-                        placeholder="e.g. CS Student | Full-Stack Developer | Open to Internships"
-                        className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
-                      />
-                    </div>
 
-                    {/* Bio / Summary */}
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="text-xs font-bold text-slate-800">Bio / Summary</label>
-                        <span className="text-[11px] text-text-muted font-mono">
-                          {bio.length}/300
-                        </span>
+                      {/* Headline */}
+                      <div>
+                        <label className="block text-xs font-bold text-slate-800 mb-1">
+                          Headline / Role <span className="text-rose-500">*</span>
+                        </label>
+                        <Input
+                          type="text"
+                          {...register('headline')}
+                          placeholder="e.g. Computer Science Student | Aspiring Full-Stack Dev"
+                          className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
+                        />
+                        {errors.headline && (
+                          <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
+                            {errors.headline.message}
+                          </p>
+                        )}
                       </div>
-                      <textarea
-                        rows={3}
-                        maxLength={300}
-                        {...register('bio')}
-                        placeholder="Tell recruiters a bit about yourself, your interests, and goals..."
-                        className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card resize-none"
-                      />
+
+                      {/* Bio */}
+                      <div>
+                        <label className="block text-xs font-bold text-slate-800 mb-1">
+                          Short Bio (Optional)
+                        </label>
+                        <textarea
+                          {...register('bio')}
+                          rows={3}
+                          placeholder="Brief introduction about your passion, key achievements, or career goals..."
+                          className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card outline-none resize-none transition"
+                        />
+                        {errors.bio && (
+                          <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
+                            {errors.bio.message}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </motion.div>
                 )}
 
-                {/* ------------------------------------------------------------- */}
                 {/* STEP 2: EDUCATION */}
-                {/* ------------------------------------------------------------- */}
                 {step === 2 && (
                   <motion.div
-                    key="step-2"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.18 }}
-                    className="space-y-3.5"
+                    key="step2"
+                    initial={{ opacity: 0, x: 15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -15 }}
+                    transition={{ duration: 0.25 }}
+                    className="space-y-4"
                   >
                     <div>
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-text-main tracking-tight">
-                        Education
+                      <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+                        Education & Academics
                       </h2>
-                      <p className="text-xs text-text-muted font-medium mt-0.5">
-                        Where are you studying or what is your academic background?
+                      <p className="text-xs text-text-muted mt-0.5">
+                        Share your academic background and expected graduation.
                       </p>
                     </div>
 
-                    {(step2Error || errors.school || errors.degree) && (
-                      <div
-                        className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium"
-                        role="alert"
-                      >
-                        {step2Error || errors.school?.message || errors.degree?.message}
-                      </div>
-                    )}
-
-                    <div className="space-y-3">
+                    <div className="space-y-3.5">
+                      {/* School / University */}
                       <div>
                         <label className="block text-xs font-bold text-slate-800 mb-1">
-                          School / University <span className="text-red-500">*</span>
+                          School / University <span className="text-rose-500">*</span>
                         </label>
                         <Input
                           type="text"
                           {...register('school')}
-                          placeholder="e.g. Stanford University or MIT"
+                          placeholder="e.g. Stanford University"
                           className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                         />
+                        {errors.school && (
+                          <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
+                            {errors.school.message}
+                          </p>
+                        )}
                       </div>
 
+                      {/* Degree & Specialization Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                           <label className="block text-xs font-bold text-slate-800 mb-1">
-                            Degree &amp; Major <span className="text-red-500">*</span>
+                            Degree <span className="text-rose-500">*</span>
                           </label>
                           <Input
                             type="text"
@@ -696,26 +330,44 @@ export default function StudentOnboardingPage() {
                             placeholder="e.g. B.S. Computer Science"
                             className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
+                          {errors.degree && (
+                            <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
+                              {errors.degree.message}
+                            </p>
+                          )}
                         </div>
 
                         <div>
                           <label className="block text-xs font-bold text-slate-800 mb-1">
-                            Graduation Year <span className="text-red-500">*</span>
+                            Specialization / Major
+                          </label>
+                          <Input
+                            type="text"
+                            {...register('specialization')}
+                            placeholder="e.g. Artificial Intelligence"
+                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Grad Year & GPA Grid */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-bold text-slate-800 mb-1">
+                            Expected Grad Year
                           </label>
                           <select
                             {...register('graduationYear')}
-                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 outline-none text-xs sm:text-sm transition bg-card cursor-pointer"
+                            className="w-full px-3 py-2 rounded-xl border border-border-subtle focus:border-brand focus:ring-2 focus:ring-brand/15 text-xs sm:text-sm bg-card outline-none transition cursor-pointer"
                           >
-                            {gradYearOptions.map((year) => (
+                            {GRADUATION_YEAR_OPTIONS.map((year) => (
                               <option key={year} value={year}>
                                 {year}
                               </option>
                             ))}
                           </select>
                         </div>
-                      </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                           <label className="block text-xs font-bold text-slate-800 mb-1">
                             GPA (Optional)
@@ -727,15 +379,128 @@ export default function StudentOnboardingPage() {
                             className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
 
-                        <div>
-                          <label className="block text-xs font-bold text-slate-800 mb-1">
-                            Specialization (Optional)
-                          </label>
+                {/* STEP 3: SKILLS & EXPERIENCE */}
+                {step === 3 && (
+                  <motion.div
+                    key="step3"
+                    initial={{ opacity: 0, x: 15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -15 }}
+                    transition={{ duration: 0.25 }}
+                    className="space-y-4"
+                  >
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+                        Skills & Experience
+                      </h2>
+                      <p className="text-xs text-text-muted mt-0.5">
+                        Add technical skills and optional prior internship or project experience.
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      {/* Skills Input */}
+                      <div>
+                        <label className="block text-xs font-bold text-slate-800 mb-1">
+                          Technical Skills <span className="text-rose-500">*</span>
+                        </label>
+                        <div className="flex gap-2">
                           <Input
                             type="text"
-                            {...register('specialization')}
-                            placeholder="e.g. AI / Machine Learning"
+                            value={newSkillInput}
+                            onChange={(e) => setNewSkillInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault()
+                                handleAddSkill()
+                              }
+                            }}
+                            placeholder="Add a skill (e.g. React, TypeScript)..."
+                            className="flex-1 px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
+                          />
+                          <Button
+                            type="button"
+                            onClick={() => handleAddSkill()}
+                            className="px-4 py-2 rounded-xl bg-brand hover:bg-brand-hover text-white text-xs font-bold transition flex items-center gap-1 h-auto cursor-pointer"
+                          >
+                            <Plus className="w-4 h-4" />
+                            <span>Add</span>
+                          </Button>
+                        </div>
+
+                        {/* Current Skill Badges */}
+                        {skills.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-2.5">
+                            {skills.map((skill) => (
+                              <Badge
+                                key={skill}
+                                className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-xs font-semibold flex items-center gap-1.5 shadow-none"
+                              >
+                                <span>{skill}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveSkill(skill)}
+                                  className="hover:text-rose-600 transition cursor-pointer bg-transparent border-0 p-0"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Popular Skill Suggestions */}
+                        <div className="mt-2.5">
+                          <span className="text-xs font-semibold text-slate-500">
+                            Popular suggestions:
+                          </span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {POPULAR_SKILL_SUGGESTIONS.map((ps) => (
+                              <button
+                                type="button"
+                                key={ps}
+                                onClick={() => handleAddSkill(ps)}
+                                disabled={skills.includes(ps)}
+                                className={`text-xs px-2 py-0.5 rounded-md border transition cursor-pointer ${
+                                  skills.includes(ps)
+                                    ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-default'
+                                    : 'bg-card text-slate-600 border-border-subtle hover:border-brand hover:text-brand'
+                                }`}
+                              >
+                                + {ps}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {errors.skills && (
+                          <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
+                            {errors.skills.message}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Recent Experience */}
+                      <div className="pt-2 border-t border-border-subtle/50 space-y-3">
+                        <span className="text-xs font-bold text-slate-800 block">
+                          Most Recent Role / Internship (Optional)
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <Input
+                            type="text"
+                            {...register('experienceRole')}
+                            placeholder="Role (e.g. Frontend Intern)"
+                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
+                          />
+                          <Input
+                            type="text"
+                            {...register('experienceCompany')}
+                            placeholder="Company (e.g. Acme Corp)"
                             className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
@@ -744,155 +509,26 @@ export default function StudentOnboardingPage() {
                   </motion.div>
                 )}
 
-                {/* ------------------------------------------------------------- */}
-                {/* STEP 3: SKILLS & EXPERIENCE */}
-                {/* ------------------------------------------------------------- */}
-                {step === 3 && (
-                  <motion.div
-                    key="step-3"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.18 }}
-                    className="space-y-3"
-                  >
-                    <div>
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-text-main tracking-tight">
-                        Skills &amp; Experience
-                      </h2>
-                      <p className="text-xs text-text-muted font-medium mt-0.5">
-                        Showcase your technical superpowers and past work or projects.
-                      </p>
-                    </div>
-
-                    {/* Skills Input & Badges */}
-                    <div className="space-y-2">
-                      <label className="block text-xs font-bold text-slate-800">
-                        Technical Skills
-                      </label>
-                      <div className="flex gap-2">
-                        <Input
-                          type="text"
-                          value={newSkillInput}
-                          onChange={(e) => setNewSkillInput(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault()
-                              handleAddSkill()
-                            }
-                          }}
-                          placeholder="Type a skill and press Enter..."
-                          className="flex-1 px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
-                        />
-                        <Button
-                          type="button"
-                          onClick={() => handleAddSkill()}
-                          className="px-3.5 py-2 bg-brand hover:bg-brand-hover text-white font-semibold rounded-xl text-xs sm:text-sm flex items-center gap-1 shrink-0 h-auto"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                          <span>Add</span>
-                        </Button>
-                      </div>
-
-                      {/* Added Skills Badges */}
-                      <div className="flex flex-wrap gap-1.5 max-h-[58px] overflow-hidden">
-                        {skills.map((s) => (
-                          <Badge
-                            key={s}
-                            variant="secondary"
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-light text-brand-dark text-xs font-bold border border-brand/20 shadow-2xs"
-                          >
-                            <span>{s}</span>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleRemoveSkill(s)}
-                              className="h-3.5 w-3.5 p-0 hover:bg-transparent hover:text-red-500 text-brand-dark"
-                              aria-label={`Remove skill ${s}`}
-                            >
-                              <X className="w-3 h-3" />
-                            </Button>
-                          </Badge>
-                        ))}
-                      </div>
-
-                      {/* Quick Add Suggestions */}
-                      <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                        <span className="text-[11px] font-medium text-text-muted mr-1">
-                          Popular:
-                        </span>
-                        {popularSkills
-                          .filter((s) => !skills.includes(s))
-                          .slice(0, 5)
-                          .map((suggestion) => (
-                            <Button
-                              key={suggestion}
-                              type="button"
-                              variant="ghost"
-                              size="xs"
-                              onClick={() => handleAddSkill(suggestion)}
-                              className="text-[10px] font-medium bg-slate-100 hover:bg-brand-light hover:text-brand-hover text-slate-600 px-2 py-0.5 rounded-md h-auto"
-                            >
-                              + {suggestion}
-                            </Button>
-                          ))}
-                      </div>
-                    </div>
-
-                    {/* Past Experience */}
-                    <div className="border-t border-border-subtle/50 pt-2.5 space-y-2">
-                      <h4 className="text-xs font-bold text-slate-800">
-                        Experience / Internships (Optional)
-                      </h4>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        <Input
-                          type="text"
-                          {...register('experienceRole')}
-                          placeholder="Role (e.g. Frontend Intern)"
-                          className="w-full px-3 py-1.5 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs bg-card h-auto"
-                        />
-                        <Input
-                          type="text"
-                          {...register('experienceCompany')}
-                          placeholder="Company (e.g. DK24 Labs)"
-                          className="w-full px-3 py-1.5 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs bg-card h-auto"
-                        />
-                      </div>
-
-                      <Input
-                        type="text"
-                        {...register('experienceSummary')}
-                        placeholder="Brief summary of achievements or projects..."
-                        className="w-full px-3 py-1.5 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs bg-card h-auto"
-                      />
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* ------------------------------------------------------------- */}
-                {/* STEP 4: LINKS & FINISH */}
-                {/* ------------------------------------------------------------- */}
+                {/* STEP 4: PROFILES & LINKS */}
                 {step === 4 && (
                   <motion.div
-                    key="step-4"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.18 }}
-                    className="space-y-3.5"
+                    key="step4"
+                    initial={{ opacity: 0, x: 15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -15 }}
+                    transition={{ duration: 0.25 }}
+                    className="space-y-4"
                   >
                     <div>
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-text-main tracking-tight">
-                        Links &amp; Finish
+                      <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+                        Online Profiles & Links
                       </h2>
-                      <p className="text-xs text-text-muted font-medium mt-0.5">
-                        Connect your online profiles so verified recruiters can check your work.
+                      <p className="text-xs text-text-muted mt-0.5">
+                        Add links to your code repositories, LinkedIn, or portfolio.
                       </p>
                     </div>
 
-                    <div className="space-y-2.5">
+                    <div className="space-y-3">
                       {/* GitHub */}
                       <div>
                         <label className="block text-xs font-bold text-slate-800 mb-1">
@@ -903,7 +539,7 @@ export default function StudentOnboardingPage() {
                           <Input
                             type="url"
                             {...register('githubUrl')}
-                            placeholder="https://github.com/yourusername"
+                            placeholder="https://github.com/username"
                             className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
@@ -924,7 +560,7 @@ export default function StudentOnboardingPage() {
                           <Input
                             type="url"
                             {...register('linkedinUrl')}
-                            placeholder="https://linkedin.com/in/yourusername"
+                            placeholder="https://linkedin.com/in/username"
                             className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
@@ -938,14 +574,14 @@ export default function StudentOnboardingPage() {
                       {/* Portfolio */}
                       <div>
                         <label className="block text-xs font-bold text-slate-800 mb-1">
-                          Portfolio / Website (Optional)
+                          Portfolio Website URL
                         </label>
                         <div className="relative flex items-center">
                           <Globe className="w-4 h-4 text-slate-400 absolute left-3 z-10" />
                           <Input
                             type="url"
                             {...register('portfolioUrl')}
-                            placeholder="https://yourportfolio.dev"
+                            placeholder="https://alexrivera.dev"
                             className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
@@ -982,7 +618,7 @@ export default function StudentOnboardingPage() {
               </AnimatePresence>
             </div>
 
-            {/* Bottom Actions Bar (Fixed at bottom of right column) */}
+            {/* Bottom Actions Bar */}
             <div className="flex items-center justify-between pt-3 border-t border-border-subtle/50 shrink-0">
               {/* Back Button */}
               <Button

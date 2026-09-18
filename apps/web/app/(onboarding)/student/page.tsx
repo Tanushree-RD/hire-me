@@ -232,7 +232,6 @@ export default function StudentOnboardingPage() {
                           type="text"
                           {...register('fullName')}
                           placeholder="e.g. Alex Rivera"
-                          className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                         />
                         {errors.fullName && (
                           <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
@@ -250,7 +249,6 @@ export default function StudentOnboardingPage() {
                           type="text"
                           {...register('headline')}
                           placeholder="e.g. Computer Science Student | Aspiring Full-Stack Dev"
-                          className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                         />
                         {errors.headline && (
                           <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
@@ -309,7 +307,6 @@ export default function StudentOnboardingPage() {
                           type="text"
                           {...register('school')}
                           placeholder="e.g. Stanford University"
-                          className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                         />
                         {errors.school && (
                           <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
@@ -328,7 +325,6 @@ export default function StudentOnboardingPage() {
                             type="text"
                             {...register('degree')}
                             placeholder="e.g. B.S. Computer Science"
-                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                           {errors.degree && (
                             <p role="alert" className="text-xs font-medium text-rose-500 mt-1">
@@ -345,7 +341,6 @@ export default function StudentOnboardingPage() {
                             type="text"
                             {...register('specialization')}
                             placeholder="e.g. Artificial Intelligence"
-                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                       </div>
@@ -372,12 +367,7 @@ export default function StudentOnboardingPage() {
                           <label className="block text-xs font-bold text-slate-800 mb-1">
                             GPA (Optional)
                           </label>
-                          <Input
-                            type="text"
-                            {...register('gpa')}
-                            placeholder="e.g. 3.8 / 4.0"
-                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
-                          />
+                          <Input type="text" {...register('gpa')} placeholder="e.g. 3.8 / 4.0" />
                         </div>
                       </div>
                     </div>
@@ -409,26 +399,23 @@ export default function StudentOnboardingPage() {
                         <label className="block text-xs font-bold text-slate-800 mb-1">
                           Technical Skills <span className="text-rose-500">*</span>
                         </label>
-                        <div className="flex gap-2">
-                          <Input
-                            type="text"
-                            value={newSkillInput}
-                            onChange={(e) => setNewSkillInput(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault()
-                                handleAddSkill()
-                              }
-                            }}
-                            placeholder="Add a skill (e.g. React, TypeScript)..."
-                            className="flex-1 px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
-                          />
-                          <Button
-                            type="button"
-                            onClick={() => handleAddSkill()}
-                            className="px-4 py-2 rounded-xl bg-brand hover:bg-brand-hover text-white text-xs font-bold transition flex items-center gap-1 h-auto cursor-pointer"
-                          >
-                            <Plus className="w-4 h-4" />
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1">
+                            <Input
+                              type="text"
+                              value={newSkillInput}
+                              onChange={(e) => setNewSkillInput(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault()
+                                  handleAddSkill()
+                                }
+                              }}
+                              placeholder="Add a skill (e.g. React, TypeScript)..."
+                            />
+                          </div>
+                          <Button type="button" size="sm" onClick={() => handleAddSkill()}>
+                            <Plus />
                             <span>Add</span>
                           </Button>
                         </div>
@@ -437,17 +424,15 @@ export default function StudentOnboardingPage() {
                         {skills.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mt-2.5">
                             {skills.map((skill) => (
-                              <Badge
-                                key={skill}
-                                className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-xs font-semibold flex items-center gap-1.5 shadow-none"
-                              >
+                              <Badge key={skill} variant="secondary">
                                 <span>{skill}</span>
                                 <button
                                   type="button"
                                   onClick={() => handleRemoveSkill(skill)}
-                                  className="hover:text-rose-600 transition cursor-pointer bg-transparent border-0 p-0"
+                                  aria-label={`Remove ${skill}`}
+                                  className="hover:text-destructive transition-colors bg-transparent border-0 p-0 cursor-pointer"
                                 >
-                                  <X className="w-3 h-3" />
+                                  <X className="size-3" />
                                 </button>
                               </Badge>
                             ))}
@@ -495,13 +480,11 @@ export default function StudentOnboardingPage() {
                             type="text"
                             {...register('experienceRole')}
                             placeholder="Role (e.g. Frontend Intern)"
-                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                           <Input
                             type="text"
                             {...register('experienceCompany')}
                             placeholder="Company (e.g. Acme Corp)"
-                            className="w-full px-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                       </div>
@@ -534,13 +517,12 @@ export default function StudentOnboardingPage() {
                         <label className="block text-xs font-bold text-slate-800 mb-1">
                           GitHub Profile URL
                         </label>
-                        <div className="relative flex items-center">
-                          <Code className="w-4 h-4 text-slate-400 absolute left-3 z-10" />
+                        <div className="flex items-center gap-2">
+                          <Code className="size-4 shrink-0 text-text-muted" />
                           <Input
                             type="url"
                             {...register('githubUrl')}
                             placeholder="https://github.com/username"
-                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                         {errors.githubUrl && (
@@ -555,13 +537,12 @@ export default function StudentOnboardingPage() {
                         <label className="block text-xs font-bold text-slate-800 mb-1">
                           LinkedIn Profile URL
                         </label>
-                        <div className="relative flex items-center">
-                          <Link className="w-4 h-4 text-slate-400 absolute left-3 z-10" />
+                        <div className="flex items-center gap-2">
+                          <Link className="size-4 shrink-0 text-text-muted" />
                           <Input
                             type="url"
                             {...register('linkedinUrl')}
                             placeholder="https://linkedin.com/in/username"
-                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                         {errors.linkedinUrl && (
@@ -576,13 +557,12 @@ export default function StudentOnboardingPage() {
                         <label className="block text-xs font-bold text-slate-800 mb-1">
                           Portfolio Website URL
                         </label>
-                        <div className="relative flex items-center">
-                          <Globe className="w-4 h-4 text-slate-400 absolute left-3 z-10" />
+                        <div className="flex items-center gap-2">
+                          <Globe className="size-4 shrink-0 text-text-muted" />
                           <Input
                             type="url"
                             {...register('portfolioUrl')}
                             placeholder="https://alexrivera.dev"
-                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                         {errors.portfolioUrl && (
@@ -597,13 +577,12 @@ export default function StudentOnboardingPage() {
                         <label className="block text-xs font-bold text-slate-800 mb-1">
                           Resume / CV Link (Optional)
                         </label>
-                        <div className="relative flex items-center">
-                          <FileText className="w-4 h-4 text-slate-400 absolute left-3 z-10" />
+                        <div className="flex items-center gap-2">
+                          <FileText className="size-4 shrink-0 text-text-muted" />
                           <Input
                             type="url"
                             {...register('resumeUrl')}
                             placeholder="https://drive.google.com/... or resume URL"
-                            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-border-subtle focus-visible:border-brand focus-visible:ring-brand/15 text-xs sm:text-sm bg-card h-auto"
                           />
                         </div>
                         {errors.resumeUrl && (
@@ -621,13 +600,8 @@ export default function StudentOnboardingPage() {
             {/* Bottom Actions Bar */}
             <div className="flex items-center justify-between pt-3 border-t border-border-subtle/50 shrink-0">
               {/* Back Button */}
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={handleBack}
-                className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition cursor-pointer active:scale-[0.98] h-auto shadow-none"
-              >
-                <ArrowLeft className="w-4 h-4" />
+              <Button type="button" variant="secondary" onClick={handleBack}>
+                <ArrowLeft />
                 <span>Back</span>
               </Button>
 
@@ -636,17 +610,16 @@ export default function StudentOnboardingPage() {
                 type="button"
                 onClick={handleNext}
                 disabled={isCompleted || saveStudentMutation.isPending}
-                className="flex items-center gap-2 px-5 sm:px-6 py-2 rounded-xl bg-action-dark hover:bg-black text-white font-semibold text-xs sm:text-sm transition shadow-md hover:shadow-lg cursor-pointer active:scale-[0.98] disabled:opacity-70 h-auto"
               >
                 {step < 4 ? (
                   <>
                     <span>Next</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight />
                   </>
                 ) : (
                   <>
                     <span>{isCompleted ? 'Profile Created!' : 'Finish Setup'}</span>
-                    <Sparkles className="w-4 h-4 text-brand-emerald" />
+                    <Sparkles />
                   </>
                 )}
               </Button>
